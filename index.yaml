@@ -1,0 +1,22 @@
+apiVersion: v1
+entries:
+  tooljet:
+  - apiVersion: v2
+    appVersion: v1.21.3
+    created: "2022-07-28T10:12:31.242542619Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.19
+    description: ToolJet is an open-source low-code framework to build and deploy internal tools quickly without much effort from the engineering teams.
+    digest: c35977544c9e0debb51b164d161fee3817a3742c9150363d9d54c300529c3de3
+    maintainers:
+    - email: akshay@tooljet.io
+      name: akshay-sasidharan
+    name: tooljet
+    type: application
+    urls:
+    - https://github.com/ToolJet/helm-charts/releases/download/tooljet-1.21.3/tooljet-1.21.3.tgz
+    version: 1.21.3
+generated: "2022-07-28T10:12:30.794188856Z"
