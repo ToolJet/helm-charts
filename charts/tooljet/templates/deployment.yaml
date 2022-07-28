@@ -47,4 +47,4 @@ spec:
             {{- end }}
           envFrom:
             - secretRef:
-              name: {{ .Values.apps.tooljet.secret.name }}
+                name: {{ .Values.apps.tooljet.secret.name }}
