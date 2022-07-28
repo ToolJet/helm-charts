@@ -45,8 +45,6 @@ spec:
                   name: {{ .Values.postgresql.existingSecret }}
                   key: {{ default "password" .Values.postgresql.existingSecretKey }}
             {{- end }}
-            - name: DEPLOYMENT_PLATFORM
-              value: "k8s:helm"
           envFrom:
             - secretRef:
               name: {{ .Values.apps.tooljet.secret.name }}

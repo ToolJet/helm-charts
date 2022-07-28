@@ -50,3 +50,9 @@ postgresql:
   # When defined the `postgresqlPassword` field is ignored
   # existingSecret: secret-name
   # existingSecretKey: password
+
+# Environment variables
+# Configure additional env variables down below
+# https://docs.tooljet.com/docs/setup/env-vars/
+env:
+  DEPLOYMENT_PLATFORM: "k8s:helm"
