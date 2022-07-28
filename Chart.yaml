@@ -1,7 +1,7 @@
 apiVersion: v2
 name: tooljet
 type: application
-description: ToolJet is an open-source low-code framework to build and deploy internal tools quickly without much effort from the engineering teams.
+description: ToolJet is an open-source low-code framework to build and deploy internal tools quickly without much effort from the engineering teams
 maintainers:
 - name: akshay-sasidharan
   email: akshay@tooljet.io
