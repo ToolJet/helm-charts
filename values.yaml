@@ -1,0 +1,52 @@
+apps:
+  tooljet:
+    service:
+      type: ClusterIP
+      host: "http://localhost"
+    deployment:
+      image:
+        repository: tooljet/tooljet-ce
+        pullPolicy: IfNotPresent
+      resources:
+        requests:
+          memory: "1000Mi"
+          cpu: "1000m"
+        limits:
+          memory: "2000Mi"
+          cpu: "2000m"
+    hpa:
+      min: 1
+      max: 1
+      threshhold:
+        cpu: 0.75
+        ram: 768Mi
+    secret:
+      name: tooljet-server
+      data:
+        lockbox_key: "0123456789ABCDEF"
+        secret_key_base: "0123456789ABCDEF"
+
+# https://artifacthub.io/packages/helm/bitnami/postgresql#global-parameters
+postgresql:
+  enabled: true
+  postgresqlExtendedConf:
+    maxConnections: 1024
+  replication:
+    enabled: false
+  auth:
+    username: "postgres"
+    # Keys below are ignored if auth.existingSecret with key password is provided
+    postgresPassword: "postgres" # Password for the "postgres" admin user
+    password: "postgres"
+    database: "tooljet_production"
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClass: ""
+  # The following variables are to be used when internal PG is disabled
+  # postgresqlHost: postgres
+  # postgresqlPort: 5432
+  # When defined the `postgresqlPassword` field is ignored
+  # existingSecret: secret-name
+  # existingSecretKey: password

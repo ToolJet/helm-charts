@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tooljet
+spec:
+  selector:
+    matchLabels:
+      app: tooljet
+  template:
+    metadata:
+      labels:
+        app: tooljet
+    spec:
+      containers:
+        - name: tooljet
+          image: "{{ .Values.apps.tooljet.deployment.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: "{{ .Values.apps.tooljet.deployment.image.pullPolicy }}"
+          args: ["npm", "run", "start:prod"]
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              memory: {{ .Values.apps.tooljet.deployment.resources.limits.memory }}
+              cpu: {{ .Values.apps.tooljet.deployment.resources.limits.cpu }}
+            requests:
+              memory: {{ .Values.apps.tooljet.deployment.resources.requests.memory }}
+              cpu: {{ .Values.apps.tooljet.deployment.resources.requests.cpu }}
+          readinessProbe:
+            httpGet:
+              port: 3000
+              path: /api/health
+            successThreshold: 1
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 6
+          env:
+            - name: TOOLJET_HOST
+              value: "{{ .Values.apps.tooljet.service.host }}"
+            - name: PG_HOST
+              value: "{{ .Release.Name }}-postgresql"
+            {{- if .Values.postgresql.existingSecret }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgresql.existingSecret }}
+                  key: {{ default "password" .Values.postgresql.existingSecretKey }}
+            {{- end }}
+            - name: DEPLOYMENT_PLATFORM
+              value: "k8s:helm"
+          envFrom:
+            - secretRef:
+              name: {{ .Values.apps.tooljet.secret.name }}
