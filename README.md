@@ -12,14 +12,13 @@ helm install tooljet tooljet/tooljet
 ```
 
 ### From the source
-1) Clone the repo and `cd` into this directory
-2) Run `helm dependency update`
+1) Clone the repo and `cd` into this directory \
+2) Run `helm dependency update`\
 3) Recommended but optional:\
 Patch the values in `values.yaml` file (usernames & passwords, persistence, ...).
 4) Run `helm install -n $NAMESPACE --create-namespace $RELEASE .`\
 You need to replace these variables with your configuration values.
 5) The database won't be seeded yet. For that, shell into the `tooljet` pod and run `npm run db:seed` in the `/app` folder. You can now login with user `dev@tooljet.io` and password `password`.
-
 
 ## Questions? Feedback?
 [Join our Slack](https://join.slack.com/t/tooljet/shared_invite/zt-r2neyfcw-KD1COL6t2kgVTlTtAV5rtg)
