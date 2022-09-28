@@ -36,8 +36,6 @@ spec:
           env:
             - name: TOOLJET_HOST
               value: "{{ .Values.apps.tooljet.service.host }}"
-            - name: PG_HOST
-              value: "{{ .Release.Name }}-postgresql"
             {{- if .Values.postgresql.existingSecret }}
             - name: POSTGRES_PASSWORD
               valueFrom:
