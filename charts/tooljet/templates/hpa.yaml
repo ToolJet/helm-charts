@@ -1,20 +1,28 @@
+{{- if .Values.apps.tooljet.hpa.enabled }}
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: tooljet
+  name: {{ include "tooljet.fullname" . }}
+  labels:
+    {{- include "tooljet.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: tooljet
+    name: {{ include "tooljet.fullname" . }}
   minReplicas: {{ .Values.apps.tooljet.hpa.min }}
   maxReplicas: {{ .Values.apps.tooljet.hpa.max }}
   metrics:
+  {{- if .Values.apps.tooljet.hpa.threshhold.cpu }}
   - type: Resource
     resource:
       name: cpu
       targetAverageValue: {{ .Values.apps.tooljet.hpa.threshhold.cpu }}
+  {{- end }}
+  {{- if .Values.apps.tooljet.hpa.threshhold.ram }}
   - type: Resource
     resource:
       name: memory
       targetAverageValue: {{ .Values.apps.tooljet.hpa.threshhold.ram }}
+  {{- end }}
+{{- end }}

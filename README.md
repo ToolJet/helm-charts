@@ -1,7 +1,7 @@
 # ToolJet Helm Chart
 This repository contains helm charts for [ToolJet](https://github.com/ToolJet/ToolJet).\
 Charts can be used to install ToolJet in a Kubernetes Cluster via [Helm v3](https://helm.sh).\
-This setup comes with an included PostgreSQL server out of the box which is enabled by default. You can disable it and update `values.yml` with a different PostgreSQL server to be used with.
+This setup comes with an included PostgreSQL server out of the box which is enabled by default. You can disable it and update `values.yaml` with a different PostgreSQL server to be used with.
 
 ## Installation
 
