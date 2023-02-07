@@ -50,7 +50,7 @@ postgresql:
     # The two keys below are ignored if auth.existingSecret with key password is provided
     postgresPassword: "postgres" # Password for the "postgres" admin user
     password: "postgres"
-    existingSecret: postgres-secrets
+    existingSecret: tooljet-secrets
     secretKeys:
       adminPasswordKey: tooljet-db-postgres-pass
       userPasswordKey: tooljet-db-pass
