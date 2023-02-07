@@ -2,57 +2,132 @@ apps:
   tooljet:
     service:
       type: ClusterIP
-      host: "http://localhost"
+      port: 80
     deployment:
+      replicas: 2
       image:
         repository: tooljet/tooljet-ce
+        tag: "v2.1.0"
         pullPolicy: IfNotPresent
+      containerPort: 3000
       resources:
         requests:
           memory: "1000Mi"
-          cpu: "1000m"
+          cpu: "500m"
         limits:
-          memory: "2000Mi"
-          cpu: "2000m"
+          memory: "1000Mi"
+          cpu: "500m"
     hpa:
+      enabled: false
       min: 1
       max: 1
       threshhold:
         cpu: 0.75
         ram: 768Mi
-    secret:
-      name: tooljet-server
-      data:
-        lockbox_key: "0123456789ABCDEF"
-        secret_key_base: "0123456789ABCDEF"
+
+# Required secrets for built-in postgres instance and default environment variables. This creates a kubernetes secret with these populated values.
+# Set enabled to false when using something like external-secrets to populate your secrets.
+plaintextSecrets:
+  enabled: true
+  secrets:
+    # You can add more key:value pairs here to create more hard-coded secrets if required.
+    tooljet-db-postgres-pass: "dfjahsf73rjwef8asdufis" 
+    tooljet-db-pass: "234782487euifsjdfjsdjfs"
+    tooljet-master-key: "17465f47e5aba6e1926f3d88b4d28bb2a07daa0941d9a4d5aae5afe0820d1ac4"
+    tooljet-secret-key-base: "ff5c6f7816d9fe59095eb04d18860b9671b1a9a16cea4e8b5a0bf41150c92933c88a4ccea0aa999b8ff6944e608d6f90591b52b2e3ab4c86b81f10c55222633d"
 
 # https://artifacthub.io/packages/helm/bitnami/postgresql#global-parameters
 postgresql:
+  # Set to false if using an external postgres database.
   enabled: true
   postgresqlExtendedConf:
     maxConnections: 1024
   replication:
     enabled: false
   auth:
-    username: "postgres"
-    # Keys below are ignored if auth.existingSecret with key password is provided
+    username: "tooljet_dbuser"
+    database: "tooljet_production"
+    # The two keys below are ignored if auth.existingSecret with key password is provided
     postgresPassword: "postgres" # Password for the "postgres" admin user
     password: "postgres"
-    database: "tooljet_production"
+    existingSecret: postgres-secrets
+    secretKeys:
+      adminPasswordKey: tooljet-db-postgres-pass
+      userPasswordKey: tooljet-db-pass
   primary:
     persistence:
       enabled: true
       size: 8Gi
       storageClass: ""
-  # The following variables are to be used when internal PG is disabled
-  # postgresqlHost: postgres
-  # postgresqlPort: 5432
-  # When defined the `postgresqlPassword` field is ignored
-  # existingSecret: secret-name
-  # existingSecretKey: password
 
 # Environment variables
 # Configure additional env variables down below
 # https://docs.tooljet.com/docs/setup/env-vars/
 env:
-  DEPLOYMENT_PLATFORM: "k8s:helm"
+  - name: DEPLOYMENT_PLATFORM
+    value: "k8s:helm"
+  - name: TOOLJET_HOST
+    value: "http://localhost"
+  - name: PG_HOST
+    value: "tooljet-postgresql"
+  - name: PG_DB
+    value: "tooljet_production"
+  - name: PG_PORT
+    value: 5432
+  - name: PG_USER
+    value: "tooljet_dbuser"
+  - name: PG_PASS
+    valueFrom:
+      secretKeyRef:
+        key: tooljet-db-pass
+        name: tooljet-secrets
+  # LOCKBOX_MASTER_KEY and SECRET_KEY_BASE use hex strings. E.G. openssl rand -hex <byte>. See: https://docs.tooljet.com/docs/setup/env-vars/#application-secret--required-
+  - name: LOCKBOX_MASTER_KEY
+    valueFrom:
+      secretKeyRef:
+        key: tooljet-master-key
+        name: tooljet-secrets
+  - name: SECRET_KEY_BASE 
+    valueFrom:
+      secretKeyRef:
+        key: tooljet-secret-key-base
+        name: tooljet-secrets
+
+ingress:
+  enabled: false
+  # Annotations to add to the Ingress. Some examples are commented out.
+  annotations: {}
+    # kubernetes.io/ingress.class: traefik
+    # traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    # traefik.ingress.kubernetes.io/router.tls: "true"
+    # traefik.frontend.passHostHeader: "true"
+    # cert-manager.io/cluster-issuer: letsencrypt
+  hosts:
+    - host: mytooljet.my.domain
+      paths:
+        - /
+  tls:
+    - hosts:
+        - mytooljet.my.domain
+      secretName: tooljet-cert
+
+# Extra sidecar containers. Useful, for example, if needing to deploy Cloud SQL Proxy as shown
+extraContainers:
+  # - name: cloudsql-proxy 
+  #   image:  gcr.io/cloudsql-docker/gce-proxy:1.33.1
+  #   command:
+  #     - /cloud_sql_proxy
+  #   args:
+  #     - -instances=my-project:us-west1:my-instance=tcp:5432
+  #   ports:
+  #     - containerPort: 5432
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account. Useful for when using Workload Identity or similar.
+  annotations: {}
+    # iam.gke.io/gcp-service-account: my-sa@my-project.iam.gserviceaccount.com
+
+nameOverride: ""
+fullnameOverride: ""
