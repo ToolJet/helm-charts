@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: tooljet
-          image: "{{ .Values.apps.tooljet.deployment.image.repository }}:{{ .Chart.AppVersion }}"
+          image: "{{ .Values.apps.tooljet.deployment.image.repository }}:{{ .Values.apps.tooljet.deployment.image.tag }}"
           imagePullPolicy: "{{ .Values.apps.tooljet.deployment.image.pullPolicy }}"
           args: ["npm", "run", "start:prod"]
           ports:
@@ -33,11 +33,14 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 5
             failureThreshold: 6
+
           env:
             - name: TOOLJET_HOST
               value: "{{ .Values.apps.tooljet.service.host }}"
+ 
             - name: PG_HOST
               value: "{{ .Release.Name }}-postgresql"
+
             {{- if .Values.postgresql.existingSecret }}
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -45,6 +48,30 @@ spec:
                   name: {{ .Values.postgresql.existingSecret }}
                   key: {{ default "password" .Values.postgresql.existingSecretKey }}
             {{- end }}
+
+            - name: ENABLE_TOOLJET_DB
+              value: {{ .Values.env.ENABLE_TOOLJET_DB }}
+
+            - name:  TOOLJET_DB
+              value: {{ .Values.env.TOOLJET_DB }}
+
+            - name: TOOLJET_DB_HOST
+              value: {{ print .Release.Name  "-postgresql" }}
+
+            {{- if .Values.postgresql.existingSecret }}
+            - name:   TOOLJET_DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgresql.existingSecret }}
+                  key: {{ default "password" .Values.postgresql.existingSecretKey }}
+            {{- end }}
+
+            - name: TOOLJET_DB_USER
+              value: {{ .Values.postgresql.auth.username }}
+
+            - name: PGRST_HOST
+              value: {{ .Values.env.PGRST_HOST }}          
+
           envFrom:
             - secretRef:
                 name: {{ .Values.apps.tooljet.secret.name }}
