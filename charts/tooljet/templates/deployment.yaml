@@ -70,7 +70,13 @@ spec:
               value: {{ .Values.postgresql.auth.username }}
 
             - name: PGRST_HOST
-              value: {{ .Values.env.PGRST_HOST }}          
+              value: "tooljet-postgrest-service"
+
+            - name: PGRST_JWT_SECRET
+              value: {{ .Values.env.jwt_secret }}
+
+            - name: PGRST_DB_URI
+              value: {{ .Values.env.db_uri }}
 
           envFrom:
             - secretRef:

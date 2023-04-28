@@ -10,40 +10,44 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: tooljet-postgrest
-      app.kubernetes.io/instance: tooljet-postgrest
+      component: tooljet-postgrest # updated label here
   template:
     metadata:
       labels:
+        component: tooljet-postgrest # added label here
         app.kubernetes.io/name: tooljet-postgrest
         app.kubernetes.io/instance: tooljet-postgrest
     spec:
       containers:
         - name: {{ .Chart.Name }}
+          ports:
+          - containerPort: 3000        
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: PGRST_DB_URI
               value: {{ .Values.env.db_uri }}
 
+            - name: PGRST_HOST
+              value: "tooljet-postgrest-service.default.svc.cluster.local"
+
+            - name: PGRST_DB_ANON_ROLE
+              value: postgres              
+                       
             - name: PGRST_JWT_SECRET
               value: {{ .Values.env.jwt_secret }}
 
             - name: PGRST_LOG_LEVEL
               value: "info"
 
-          ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
-          livenessProbe:
-           httpGet:
-             path: /
-             port: http
-          readinessProbe:
-           httpGet:
-             path: /
-             port: 3000
+          # livenessProbe:
+          #  httpGet:
+          #    path: /
+          #    port: http
+          # readinessProbe:
+          #  httpGet:
+          #    path: /
+          #    port: 3000
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
