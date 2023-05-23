@@ -11,6 +11,10 @@ dependencies:
   name: postgresql
   version: "11.6.19"
   repository: "https://charts.bitnami.com/bitnami"
+- condition: redis.enabled
+  name: redis
+  version: "16.13.2"
+  repository: "https://charts.bitnami.com/bitnami"  
 
 version: 2.1.5
 appVersion: "v1.21.3"
