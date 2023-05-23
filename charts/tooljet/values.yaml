@@ -66,6 +66,18 @@ env:
   TOOLJET_DB: "tooljet_db"
   PGRST_HOST: "tooljet-postgrest.default.svc.cluster.local"
 
+enterprise:
+  enabled: true
+  LICENSE_KEY: "Izl0n+/A1NV2mTJDBMTuUd6oac+N9iso1hIrYm0qePPmIeQY+ezvd2Si7vK9/FkvFt47EoxXlAM4tgGFghA3dvWGhRDUBuOhpIRMQhefEMmOR23hT1s29Te0KjNnChipvKkFyBse0+mxuWXe7zwECvjOrJzLpZv5smYz98Wc5B2Sx1qTzZUcFnE+mhlZjI00gu+ChO/5f6IwHn4NajXoNQT7GTVS0Z8rQw8P7LJmdiiij/mE839E1JVvY/FoGV5j0GRCnMVT3Z1A3CJ5PDDRFlD2T+ofVosgaMWbRFqJ1kImITiGLx7TY4fEasJjOgekz4zU2JXDvISd+/mjUa2flRrNFKZjHfYboTrtkpx6ZJQWqucAAb7T4/ZTpJnm+TDr3Nx+w1k672z9BTmK6oDcvO3NN74sqevDyn4CK8d8ujmSmKeQqd3O/jHI0SeqbToA7u5YA5FwqQn/24bB2TtBgM3RNB1ojjKrJ8gnBGXEhrwpuEb5bl8Ysbmz0j2rg81wB+38NCFY/Qp70z9cl5kpbI+09NxEjElos2dX9rReIZ0jdPkwbM7L11L1rO2NS54vwSDqRMYceUcfjheTaLmBK5k98wfNNDz/TnxhbPdyT0GvwuUxlw8Z2IATUOXbux4ARdHMboDl3TTtI/yrT6bqAffHUaWQUWJyus2FqTE59Ek="
+  REDIS_HOST: "redis-master"
+  REDIS_PORT: '"6379"'
+
+redis:
+  fullnameOverride: redis
+  usePassword: false
+  auth:
+    enabled: false  
+
 autoscaling:
   enabled: false
   minReplicas: 1

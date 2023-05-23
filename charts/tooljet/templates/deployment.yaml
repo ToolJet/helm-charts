@@ -78,6 +78,16 @@ spec:
             - name: PGRST_DB_URI
               value: {{ .Values.env.db_uri }}
 
+            {{- if .Values.enterprise.enabled }}
+            - name: LICENSE_KEY
+              value: {{ .Values.enterprise.LICENSE_KEY }}
+
+            - name: REDIS_HOST
+              value: {{ .Values.enterprise.REDIS_HOST }}
+
+            - name: REDIS_PORT
+              value: {{ .Values.enterprise.REDIS_PORT }}
+            {{- end }}
           envFrom:
             - secretRef:
                 name: {{ .Values.apps.tooljet.secret.name }}
