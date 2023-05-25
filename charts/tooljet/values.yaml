@@ -39,7 +39,7 @@ postgresql:
     # Keys below are ignored if auth.existingSecret with key password is provided
     postgresPassword: "postgres" # Password for the "postgres" admin user
     password: "postgres"
-    database: "tooljet_development"
+    database: "tooljet_production"
   primary:
     persistence:
       enabled: true
@@ -90,6 +90,10 @@ image:
   tag: v10.1.1.20221215
   pullPolicy: IfNotPresent
 
+postgrest:
+  targetPort: 3000
+  port: 80
+  containerPort: 3000
 
 service:
   type: ClusterIP

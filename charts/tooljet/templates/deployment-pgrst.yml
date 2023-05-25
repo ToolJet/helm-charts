@@ -21,7 +21,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           ports:
-          - containerPort: 3000        
+          - containerPort: {{ .Values.postgrest.containerPort }}        
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
