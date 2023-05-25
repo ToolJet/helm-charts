@@ -6,7 +6,8 @@ apps:
     deployment:
       image:
         repository: tooljet/tooljet-ce
-        pullPolicy: IfNotPresent
+        pullPolicy: Always
+        tag: v2.6.0
       resources:
         requests:
           memory: "1000Mi"
@@ -32,7 +33,7 @@ postgresql:
   postgresqlExtendedConf:
     maxConnections: 1024
   replication:
-    enabled: false
+    enabled: true
   auth:
     username: "postgres"
     # Keys below are ignored if auth.existingSecret with key password is provided
@@ -56,3 +57,47 @@ postgresql:
 # https://docs.tooljet.com/docs/setup/env-vars/
 env:
   DEPLOYMENT_PLATFORM: "k8s:helm"
+  db_uri: "postgres://postgres:postgres@tooljet-postgresql.default.svc.cluster.local:5432/tooljet_db"
+  jwt_secret: "779ce303294a7d84a2aea9ff1ef1912f9ac57220a0dd2c0861a11ca5ae6c5817"
+  ENABLE_TOOLJET_DB: '"true"'
+  TOOLJET_DB_USER: "postgres"
+  TOOLJET_DB_HOST: "tooljet-postgresql"
+  TOOLJET_DB_PASS: "postgres"
+  TOOLJET_DB: "tooljet_db"
+  PGRST_HOST: "tooljet-postgrest.default.svc.cluster.local"
+
+enterprise:
+  enabled: true
+  LICENSE_KEY: ""
+  REDIS_HOST: "redis-master"
+  REDIS_PORT: '"6379"'
+
+redis:
+  fullnameOverride: redis
+  usePassword: false
+  auth:
+    enabled: false  
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+image:
+  repository: postgrest/postgrest
+  tag: v10.1.1.20221215
+  pullPolicy: IfNotPresent
+
+postgrest:
+  targetPort: 3000
+  port: 80
+  containerPort: 3000
+
+service:
+  type: ClusterIP
+  port: 3000
+  annotations: {}
+
+  
