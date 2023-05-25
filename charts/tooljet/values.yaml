@@ -7,7 +7,7 @@ apps:
       image:
         repository: tooljet/tooljet-ce
         pullPolicy: Always
-        tag: v2.1.5
+        tag: v2.6.0
       resources:
         requests:
           memory: "1000Mi"
