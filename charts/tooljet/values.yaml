@@ -7,7 +7,7 @@ apps:
       replicas: 2
       image:
         repository: tooljet/tooljet-ce
-        tag: "v2.1.0"
+        tag: "v2.6.0"
         pullPolicy: IfNotPresent
       containerPort: 3000
       resources:

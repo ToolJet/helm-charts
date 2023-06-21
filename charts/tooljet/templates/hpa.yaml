@@ -1,5 +1,5 @@
 {{- if .Values.apps.tooljet.hpa.enabled }}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "tooljet.fullname" . }}
@@ -18,11 +18,13 @@ spec:
     resource:
       name: cpu
       targetAverageValue: {{ .Values.apps.tooljet.hpa.threshhold.cpu }}
+      targetType: AverageValue
   {{- end }}
   {{- if .Values.apps.tooljet.hpa.threshhold.ram }}
   - type: Resource
     resource:
       name: memory
       targetAverageValue: {{ .Values.apps.tooljet.hpa.threshhold.ram }}
+      targetType: AverageValue
   {{- end }}
 {{- end }}
