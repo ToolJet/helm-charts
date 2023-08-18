@@ -17,4 +17,4 @@ dependencies:
   repository: "https://charts.bitnami.com/bitnami"  
 
 version: 2.6.0
-appVersion: "v1.21.3"
+appVersion: "v1.21.5"
