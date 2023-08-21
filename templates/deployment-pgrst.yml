@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tooljet-postgrest
+  labels:
+    app.kubernetes.io/name: tooljet-postgrest
+    app.kubernetes.io/instance: tooljet-postgrest
+    app.kubernetes.io/managed-by: tooljet-postgrest  
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      component: tooljet-postgrest # updated label here
+  template:
+    metadata:
+      labels:
+        component: tooljet-postgrest # added label here
+        app.kubernetes.io/name: tooljet-postgrest
+        app.kubernetes.io/instance: tooljet-postgrest
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          ports:
+          - containerPort: {{ .Values.postgrest.containerPort }}        
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PGRST_DB_URI
+              value: {{ .Values.env.db_uri }}
+
+            - name: PGRST_HOST
+              value: "tooljet-postgrest-service.default.svc.cluster.local"
+
+            - name: PGRST_DB_ANON_ROLE
+              value: postgres              
+                       
+            - name: PGRST_JWT_SECRET
+              value: {{ .Values.env.jwt_secret }}
+
+            - name: PGRST_LOG_LEVEL
+              value: "info"
+
+          # livenessProbe:
+          #  httpGet:
+          #    path: /
+          #    port: http
+          # readinessProbe:
+          #  httpGet:
+          #    path: /
+          #    port: 3000
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

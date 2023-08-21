@@ -1,40 +1,71 @@
 apiVersion: v1
 entries:
-  tooljet:
-  - apiVersion: v2
-    appVersion: v1.21.3
-    created: "2022-07-28T11:57:53.853021642Z"
+  postgresql:
+  - annotations:
+      category: Database
+    apiVersion: v2
+    appVersion: 14.4.0
+    created: "2023-08-21T11:08:02.592457+05:30"
     dependencies:
-    - condition: postgresql.enabled
-      name: postgresql
+    - name: common
       repository: https://charts.bitnami.com/bitnami
-      version: 11.6.19
-    description: ToolJet is an open-source low-code framework to build and deploy internal tools quickly without much effort from the engineering teams.
-    digest: b362caafd232801dd4e5ecaeb6a2017aa74c99e93d5fefbd909ed105fb06c972
+      version: 1.x.x
+    description: PostgreSQL (Postgres) is an open source object-relational database
+      known for reliability and data integrity. ACID-compliant, it supports foreign
+      keys, joins, views, triggers and stored procedures.
+    digest: 8ce75af652b2a9421813311f3b16f90bd6587b2e904dffa1b98030b30431be5b
+    home: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+    icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
+    keywords:
+    - postgresql
+    - postgres
+    - database
+    - sql
+    - replication
+    - cluster
     maintainers:
-    - email: akshay@tooljet.io
-      name: akshay-sasidharan
-    name: tooljet
-    type: application
+    - name: Bitnami
+      url: https://github.com/bitnami/charts
+    - email: cedric@desaintmartin.fr
+      name: desaintmartin
+    name: postgresql
+    sources:
+    - https://github.com/bitnami/bitnami-docker-postgresql
+    - https://www.postgresql.org/
     urls:
-    - https://github.com/ToolJet/helm-charts/releases/download/tooljet-1.21.4/tooljet-1.21.4.tgz
-    version: 1.21.4
-  - apiVersion: v2
-    appVersion: v1.21.3
-    created: "2022-07-28T10:12:31.242542619Z"
+    - charts/postgresql-11.6.19.tgz
+    version: 11.6.19
+  redis:
+  - annotations:
+      category: Database
+    apiVersion: v2
+    appVersion: 6.2.7
+    created: "2023-08-21T11:08:02.59682+05:30"
     dependencies:
-    - condition: postgresql.enabled
-      name: postgresql
+    - name: common
       repository: https://charts.bitnami.com/bitnami
-      version: 11.6.19
-    description: ToolJet is an open-source low-code framework to build and deploy internal tools quickly without much effort from the engineering teams.
-    digest: c35977544c9e0debb51b164d161fee3817a3742c9150363d9d54c300529c3de3
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: Redis(R) is an open source, advanced key-value store. It is often
+      referred to as a data structure server since keys can contain strings, hashes,
+      lists, sets and sorted sets.
+    digest: 358c629ca6d1d5f96cfa4191b57f04244d55a4884c95cb76c0cf256b0a5b6826
+    home: https://github.com/bitnami/charts/tree/master/bitnami/redis
+    icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
+    keywords:
+    - redis
+    - keyvalue
+    - database
     maintainers:
-    - email: akshay@tooljet.io
-      name: akshay-sasidharan
-    name: tooljet
-    type: application
+    - name: Bitnami
+      url: https://github.com/bitnami/charts
+    - email: cedric@desaintmartin.fr
+      name: desaintmartin
+    name: redis
+    sources:
+    - https://github.com/bitnami/bitnami-docker-redis
     urls:
-    - https://github.com/ToolJet/helm-charts/releases/download/tooljet-1.21.3/tooljet-1.21.3.tgz
-    version: 1.21.3
-generated: "2022-07-28T10:12:30.794188856Z"
+    - charts/redis-16.13.2.tgz
+    version: 16.13.2
+generated: "2023-08-21T11:08:02.585491+05:30"
