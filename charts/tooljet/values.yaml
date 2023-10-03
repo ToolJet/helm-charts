@@ -36,6 +36,7 @@ ingress:
     {}
   tls: []
 # https://artifacthub.io/packages/helm/bitnami/postgresql#global-parameters
+
 postgresql:
   enabled: true
   postgresqlExtendedConf:
