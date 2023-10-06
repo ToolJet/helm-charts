@@ -16,5 +16,5 @@ dependencies:
   version: "16.13.2"
   repository: "https://charts.bitnami.com/bitnami"  
 
-version: 2.6.0
+version: 2.6.1
 appVersion: "v1.21.5"
