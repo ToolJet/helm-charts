@@ -2,12 +2,12 @@ apps:
   tooljet:
     service:
       type: ClusterIP
-      host: "http://localhost"
+      host: "http://tooljet.localhost"
     deployment:
       image:
         repository: tooljet/tooljet-ce
         pullPolicy: Always
-        tag: v2.14.0
+        tag: v2.24.0
       resources:
         requests:
           memory: "1000Mi"
@@ -27,7 +27,16 @@ apps:
         lockbox_key: "0123456789ABCDEF"
         secret_key_base: "0123456789ABCDEF"
 
+ingress:
+  enabled: true
+  hostname: tooljet.localhost
+  ingressClassName: 'nginx'
+  kubernetes.io/ingress.class: "nginx"
+  annotations:
+    {}
+  tls: []
 # https://artifacthub.io/packages/helm/bitnami/postgresql#global-parameters
+
 postgresql:
   enabled: true
   postgresqlExtendedConf:
@@ -45,12 +54,13 @@ postgresql:
       enabled: true
       size: 8Gi
       storageClass: ""
-  # The following variables are to be used when internal PG is disabled
-  # postgresqlHost: postgres
-  # postgresqlPort: 5432
-  # When defined the `postgresqlPassword` field is ignored
-  # existingSecret: secret-name
-  # existingSecretKey: password
+
+external_postgresql: #Please enter your external database vaules, Please set above posgtresql as false.
+  enabled: false
+  PG_HOST: #Database hostname
+  PG_USER: #Database username
+  PG_PASS: #Database password
+  PG_PORT: '"5432"'
 
 # Environment variables
 # Configure additional env variables down below
@@ -59,16 +69,21 @@ env:
   DEPLOYMENT_PLATFORM: "k8s:helm"
   db_uri: "postgres://postgres:postgres@tooljet-postgresql.default.svc.cluster.local:5432/tooljet_db"
   jwt_secret: "779ce303294a7d84a2aea9ff1ef1912f9ac57220a0dd2c0861a11ca5ae6c5817"
-  ENABLE_TOOLJET_DB: '"false"'
+  ENABLE_TOOLJET_DB: '"true"'
   TOOLJET_DB_USER: "postgres"
   TOOLJET_DB_HOST: "tooljet-postgresql"
   TOOLJET_DB_PASS: "postgres"
   TOOLJET_DB: "tooljet_db"
   PGRST_HOST: "tooljet-postgrest.default.svc.cluster.local"
 
-enterprise:
+tooljetdb_external_postgresql:
   enabled: false
-  LICENSE_KEY: ""
+  TOOLJET_DB_USER:  #Database username
+  TOOLJET_DB_HOST: #Database hostname
+  TOOLJET_DB_PASS: #Database password
+  db_uri: #postgres://<postgres_username>:<postgres_password><@postgres_hostname>/<database_name>
+
+redis_pod:
   REDIS_HOST: "redis-master"
   REDIS_PORT: '"6379"'
 

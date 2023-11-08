@@ -21,24 +21,26 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           ports:
-          - containerPort: {{ .Values.postgrest.containerPort }}        
+          - containerPort: 3000        
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            {{ if .Values.tooljetdb_external_postgresql.enabled}}
+            - name: PGRST_DB_URI
+              value: {{ .Values.tooljetdb_external_postgresql.db_uri }}
+            {{ else }}
             - name: PGRST_DB_URI
               value: {{ .Values.env.db_uri }}
-
-            - name: PGRST_HOST
-              value: "tooljet-postgrest-service.default.svc.cluster.local"
+            {{- end }}
 
             - name: PGRST_DB_ANON_ROLE
-              value: postgres              
+              value: postgres
                        
             - name: PGRST_JWT_SECRET
               value: {{ .Values.env.jwt_secret }}
 
             - name: PGRST_LOG_LEVEL
-              value: "info"
+              value: "info"          
 
           # livenessProbe:
           #  httpGet:
