@@ -25,8 +25,13 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            {{ if .Values.tooljetdb_external_postgresql.enabled}}
+            - name: PGRST_DB_URI
+              value: {{ .Values.tooljetdb_external_postgresql.db_uri }}
+            {{ else }}
             - name: PGRST_DB_URI
               value: {{ .Values.env.db_uri }}
+            {{- end }}
 
             - name: PGRST_HOST
               value: "tooljet-postgrest-service.default.svc.cluster.local"
