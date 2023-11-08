@@ -33,14 +33,21 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 5
             failureThreshold: 6
-
           env:
             - name: TOOLJET_HOST
               value: "{{ .Values.apps.tooljet.service.host }}"
- 
+            {{ if .Values.external_postgresql.enabled }}
+            - name: PG_HOST
+              value: "{{ .Values.external_postgresql.PG_HOST }}"
+            - name: PG_USER
+              value: "{{ .Values.external_postgresql.PG_USER }}"
+            - name: PG_PASS
+              value: "{{ .Values.external_postgresql.PG_PASS }}"
+            - name: PG_PORT
+              value: {{ .Values.external_postgresql.PG_PORT }}
+            {{ else }}
             - name: PG_HOST
               value: "{{ .Release.Name }}-postgresql"
-
             {{- if .Values.postgresql.existingSecret }}
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -48,26 +55,29 @@ spec:
                   name: {{ .Values.postgresql.existingSecret }}
                   key: {{ default "password" .Values.postgresql.existingSecretKey }}
             {{- end }}
+            {{- end }}
 
             - name: ENABLE_TOOLJET_DB
               value: {{ .Values.env.ENABLE_TOOLJET_DB }}
 
-            - name:  TOOLJET_DB
+            - name: TOOLJET_DB
               value: {{ .Values.env.TOOLJET_DB }}
 
+            {{ if .Values.tooljetdb_external_postgresql.enabled }}
             - name: TOOLJET_DB_HOST
-              value: {{ print .Release.Name  "-postgresql" }}
-
-            {{- if .Values.postgresql.existingSecret }}
-            - name:   TOOLJET_DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.postgresql.existingSecret }}
-                  key: {{ default "password" .Values.postgresql.existingSecretKey }}
-            {{- end }}
-
+              value: "{{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_HOST }}"
+            - name: TOOLJET_DB_PASS
+              value: "{{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_PASS }}"
             - name: TOOLJET_DB_USER
-              value: {{ .Values.postgresql.auth.username }}
+              value: "{{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_USER }}"
+            {{ else }}
+            - name: TOOLJET_DB_HOST
+              value: "{{ .Values.env.TOOLJET_DB_HOST }}"
+            - name: TOOLJET_DB_USER
+              value: "{{ .Values.env.TOOLJET_DB_USER }}"
+            - name: TOOLJET_DB_PASS
+              value: "{{ .Values.env.TOOLJET_DB_PASS }}"
+            {{- end }}
 
             - name: PGRST_HOST
               value: "tooljet-postgrest-service"
@@ -75,19 +85,14 @@ spec:
             - name: PGRST_JWT_SECRET
               value: {{ .Values.env.jwt_secret }}
 
-            - name: PGRST_DB_URI
-              value: {{ .Values.env.db_uri }}
-
-            {{- if .Values.enterprise.enabled }}
-            - name: LICENSE_KEY
-              value: {{ .Values.enterprise.LICENSE_KEY }}
-
             - name: REDIS_HOST
               value: {{ .Values.enterprise.REDIS_HOST }}
-
             - name: REDIS_PORT
               value: {{ .Values.enterprise.REDIS_PORT }}
-            {{- end }}
+            - name: REDIS_USER
+              value: {{ .Values.enterprise.REDIS_USER }}
+            - name: REDIS_PASSWORD
+              value: {{ .Values.enterprise.REDIS_PASSWORD }}
           envFrom:
             - secretRef:
                 name: {{ .Values.apps.tooljet.secret.name }}

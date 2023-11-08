@@ -54,12 +54,13 @@ postgresql:
       enabled: true
       size: 8Gi
       storageClass: ""
-  # The following variables are to be used when internal PG is disabled
-  # postgresqlHost: postgres
-  # postgresqlPort: 5432
-  # When defined the `postgresqlPassword` field is ignored
-  # existingSecret: secret-name
-  # existingSecretKey: password
+
+external_postgresql: #Please enter your external database vaules, Please set above posgtresql as false.
+  enabled: true
+  PG_HOST: #Database hostname
+  PG_USER: #Database username
+  PG_PASS: #Database password
+  PG_PORT: '"5432"'
 
 # Environment variables
 # Configure additional env variables down below
@@ -74,6 +75,13 @@ env:
   TOOLJET_DB_PASS: "postgres"
   TOOLJET_DB: "tooljet_db"
   PGRST_HOST: "tooljet-postgrest.default.svc.cluster.local"
+
+tooljetdb_external_postgresql:
+  enabled: true
+  TOOLJET_DB_USER:  #Database username
+  TOOLJET_DB_HOST: #Database hostname
+  TOOLJET_DB_PASS: #Database password
+  db_uri: #postgres://<postgres_username>:<postgres_password><@postgres_hostname>/<database_name>
 
 enterprise:
   enabled: false
