@@ -86,13 +86,13 @@ spec:
               value: {{ .Values.env.jwt_secret }}
 
             - name: REDIS_HOST
-              value: {{ .Values.enterprise.REDIS_HOST }}
+              value: {{ .Values.redis_pod.REDIS_HOST }}
             - name: REDIS_PORT
-              value: {{ .Values.enterprise.REDIS_PORT }}
+              value: {{ .Values.redis_pod.REDIS_PORT }}
             - name: REDIS_USER
-              value: {{ .Values.enterprise.REDIS_USER }}
+              value: {{ .Values.redis_pod.REDIS_USER }}
             - name: REDIS_PASSWORD
-              value: {{ .Values.enterprise.REDIS_PASSWORD }}
+              value: {{ .Values.redis_pod.REDIS_PASSWORD }}
           envFrom:
             - secretRef:
                 name: {{ .Values.apps.tooljet.secret.name }}
