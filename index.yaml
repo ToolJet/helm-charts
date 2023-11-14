@@ -5,7 +5,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 14.4.0
-    created: "2023-11-08T15:35:23.903382+05:30"
+    created: "2023-11-14T13:47:47.031134+05:30"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -40,7 +40,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.7
-    created: "2023-11-08T15:35:23.908376+05:30"
+    created: "2023-11-14T13:47:47.035195+05:30"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -71,7 +71,7 @@ entries:
   tooljet:
   - apiVersion: v2
     appVersion: v1.21.5
-    created: "2023-11-08T15:35:23.937904+05:30"
+    created: "2023-11-14T13:47:47.067387+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -94,7 +94,7 @@ entries:
     version: 2.24.0
   - apiVersion: v2
     appVersion: v1.21.5
-    created: "2023-11-08T15:35:23.952098+05:30"
+    created: "2023-11-14T13:47:47.080875+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -115,4 +115,4 @@ entries:
     urls:
     - charts/tooljet-2.6.0.tgz
     version: 2.6.0
-generated: "2023-11-08T15:35:23.89441+05:30"
+generated: "2023-11-14T13:47:47.022986+05:30"
