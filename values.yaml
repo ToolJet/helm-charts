@@ -28,7 +28,7 @@ apps:
         secret_key_base: "0123456789ABCDEF"
 
 ingress:
-  enabled: true
+  enabled: false
   hostname: tooljet.localhost
   ingressClassName: 'nginx'
   kubernetes.io/ingress.class: "nginx"
