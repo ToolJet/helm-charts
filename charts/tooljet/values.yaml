@@ -5,9 +5,9 @@ apps:
       host: "http://tooljet.localhost"
     deployment:
       image:
-        repository: tooljet/tooljet-ce
+        repository: tooljet/tooljet
         pullPolicy: Always
-        tag: v2.24.0
+        tag: v2.23.0-ee2.9.2
       resources:
         requests:
           memory: "1000Mi"
