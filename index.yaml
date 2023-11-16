@@ -5,7 +5,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 14.4.0
-    created: "2023-11-17T02:39:54.988566+05:30"
+    created: "2023-11-17T02:43:32.520172+05:30"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -40,7 +40,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.7
-    created: "2023-11-17T02:39:54.992404+05:30"
+    created: "2023-11-17T02:43:32.527023+05:30"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -70,8 +70,31 @@ entries:
     version: 16.13.2
   tooljet:
   - apiVersion: v2
+    appVersion: v2.25.0
+    created: "2023-11-17T02:43:32.608018+05:30"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.19
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: ToolJet is an open-source low-code framework to build and deploy
+      internal tools quickly without much effort from the engineering teams.
+    digest: 473c68ff3c0a5af9618b2a07e7a4dd90ac6c166f1b03f2d3f42b6c18a9dad3f2
+    maintainers:
+    - email: akshay@tooljet.io
+      name: akshay-sasidharan
+    name: tooljet
+    type: application
+    urls:
+    - charts/tooljet-2.25.0.tgz
+    version: 2.25.0
+  - apiVersion: v2
     appVersion: v2.24.0
-    created: "2023-11-17T02:39:55.060995+05:30"
+    created: "2023-11-17T02:43:32.598797+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -94,7 +117,7 @@ entries:
     version: 2.24.0
   - apiVersion: v2
     appVersion: v1.21.5
-    created: "2023-11-17T02:39:55.073223+05:30"
+    created: "2023-11-17T02:43:32.621218+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -115,4 +138,4 @@ entries:
     urls:
     - charts/tooljet-2.6.0.tgz
     version: 2.6.0
-generated: "2023-11-17T02:39:54.980232+05:30"
+generated: "2023-11-17T02:43:32.515345+05:30"
