@@ -1,4 +1,4 @@
-{{- if .Values.ingress.enabled }}
+{{- if and .Values.ingress.enabled (or .Values.ingress.hostname .Values.ingress.hosts) }}
 {{- $fullName := include "tooljet.fullname" . -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
