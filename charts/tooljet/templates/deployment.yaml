@@ -93,8 +93,10 @@ spec:
               value: {{ .Values.redis_pod.REDIS_USER }}
             - name: REDIS_PASSWORD
               value: {{ .Values.redis_pod.REDIS_PASSWORD }}
+            {{- if  .Values.env.DEFAULT_FROM_EMAIL }}
             - name: DEFAULT_FROM_EMAIL
               value: {{ .Values.env.DEFAULT_FROM_EMAIL }}
+            {{- end }}
             {{- if .Values.env.SMTP_USERNAME }}
             - name: SMTP_USERNAME
               value: {{ .Values.env.SMTP_USERNAME }}
@@ -103,10 +105,14 @@ spec:
             - name: SMTP_PASSWORD
               value: {{ .Values.env.SMTP_PASSWORD }}
             {{- end }}
+            {{- if .Values.env.SMTP_DOMAIN }}
             - name: SMTP_DOMAIN
               value: {{ .Values.env.SMTP_DOMAIN }}
+            {{- end }}
+            {{- if .Values.env.SMTP_PORT }}
             - name: SMTP_PORT
-              value: {{ .Values.env.SMTP_PORT | | default "25" | quote }}
+              value: {{ .Values.env.SMTP_PORT }}
+            {{- end }}
           envFrom:
             - secretRef:
                 name: {{ .Values.apps.tooljet.secret.name }}
