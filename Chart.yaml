@@ -16,5 +16,10 @@ dependencies:
   version: "16.13.2"
   repository: "https://charts.bitnami.com/bitnami"  
 
+<<<<<<< Updated upstream:Chart.yaml
 version: v2.25.0
 appVersion: "v2.25.0"
+=======
+version: 2.6.2
+appVersion: "v1.21.5"
+>>>>>>> Stashed changes:charts/tooljet/Chart.yaml
