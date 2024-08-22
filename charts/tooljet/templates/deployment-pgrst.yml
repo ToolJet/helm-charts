@@ -1,69 +1,82 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tooljet-postgrest
+  name: {{ include "tooljet.fullname" . }}-postgrest
   labels:
-    app.kubernetes.io/name: tooljet-postgrest
-    app.kubernetes.io/instance: tooljet-postgrest
-    app.kubernetes.io/managed-by: tooljet-postgrest  
+    {{- include "tooljet.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgrest
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.postgrest.replicaCount | default 1 }}
   selector:
     matchLabels:
-      component: tooljet-postgrest # updated label here
+      {{- include "tooljet.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: postgrest
   template:
     metadata:
+      {{- with .Values.postgrest.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        component: tooljet-postgrest # added label here
-        app.kubernetes.io/name: tooljet-postgrest
-        app.kubernetes.io/instance: tooljet-postgrest
+        {{- include "tooljet.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: postgrest
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
-          ports:
-          - containerPort: {{ .Values.postgrest.containerPort }}        
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        - name: postgrest
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.postgrest.containerPort }}
+              protocol: TCP
           env:
-            {{ if .Values.tooljetdb_external_postgresql.enabled}}
             - name: PGRST_DB_URI
-              value: {{ .Values.tooljetdb_external_postgresql.db_uri }}
-            {{ else }}
-            - name: PGRST_DB_URI
-              value: {{ .Values.env.db_uri }}
-            {{- end }}
-
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "tooljet.fullname" . }}-postgrest
+                  key: db-uri
             - name: PGRST_HOST
-              value: "tooljet-postgrest-service.default.svc.cluster.local"
-
+              value: {{ include "tooljet.fullname" . }}-postgrest-service.{{ .Release.Namespace }}.svc.cluster.local
             - name: PGRST_DB_ANON_ROLE
-              value: postgres              
-                       
+              value: postgres
             - name: PGRST_JWT_SECRET
-              value: {{ .Values.env.jwt_secret }}
-
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "tooljet.fullname" . }}-postgrest
+                  key: jwt-secret
             - name: PGRST_LOG_LEVEL
-              value: "info"
-
-          # livenessProbe:
-          #  httpGet:
-          #    path: /
-          #    port: http
-          # readinessProbe:
-          #  httpGet:
-          #    path: /
-          #    port: 3000
+              value: {{ .Values.postgrest.logLevel | default "info" | quote }}
+          {{- if .Values.postgrest.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: {{ .Values.postgrest.livenessProbe.initialDelaySeconds | default 30 }}
+            periodSeconds: {{ .Values.postgrest.livenessProbe.periodSeconds | default 10 }}
+          {{- end }}
+          {{- if .Values.postgrest.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: {{ .Values.postgrest.readinessProbe.initialDelaySeconds | default 30 }}
+            periodSeconds: {{ .Values.postgrest.readinessProbe.periodSeconds | default 10 }}
+          {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.postgrest.resources | nindent 12 }}
+      {{- with .Values.postgrest.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+      {{- with .Values.postgrest.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
+      {{- end }}
+      {{- with .Values.postgrest.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}

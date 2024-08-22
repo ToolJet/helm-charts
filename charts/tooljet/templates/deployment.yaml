@@ -1,98 +1,124 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tooljet
+  name: {{ include "tooljet.fullname" . }}
+  labels:
+    {{- include "tooljet.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount | default 1 }}
+  {{- end }}
   selector:
     matchLabels:
-      app: tooljet
+      {{- include "tooljet.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        app: tooljet
+        {{- include "tooljet.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
-        - name: tooljet
-          image: "{{ .Values.apps.tooljet.deployment.image.repository }}:{{ .Values.apps.tooljet.deployment.image.tag }}"
-          imagePullPolicy: "{{ .Values.apps.tooljet.deployment.image.pullPolicy }}"
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.apps.tooljet.deployment.image.repository }}:{{ .Values.apps.tooljet.deployment.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.apps.tooljet.deployment.image.pullPolicy }}
           args: ["npm", "run", "start:prod"]
           ports:
-            - containerPort: 3000
+            - name: http
+              containerPort: 3000
+              protocol: TCP
           resources:
-            limits:
-              memory: {{ .Values.apps.tooljet.deployment.resources.limits.memory }}
-              cpu: {{ .Values.apps.tooljet.deployment.resources.limits.cpu }}
-            requests:
-              memory: {{ .Values.apps.tooljet.deployment.resources.requests.memory }}
-              cpu: {{ .Values.apps.tooljet.deployment.resources.requests.cpu }}
+            {{- toYaml .Values.apps.tooljet.deployment.resources | nindent 12 }}
           readinessProbe:
             httpGet:
-              port: 3000
               path: /api/health
-            successThreshold: 1
+              port: http
             initialDelaySeconds: 10
             periodSeconds: 5
             failureThreshold: 6
           env:
             - name: TOOLJET_HOST
-              value: "{{ .Values.apps.tooljet.service.host }}"
-            {{ if .Values.external_postgresql.enabled }}
+              value: {{ .Values.apps.tooljet.service.host | quote }}
+            {{- if .Values.external_postgresql.enabled }}
             - name: PG_HOST
-              value: "{{ .Values.external_postgresql.PG_HOST }}"
+              value: {{ .Values.external_postgresql.PG_HOST | quote }}
             - name: PG_USER
-              value: "{{ .Values.external_postgresql.PG_USER }}"
+              value: {{ .Values.external_postgresql.PG_USER | quote }}
             - name: PG_PASS
-              value: "{{ .Values.external_postgresql.PG_PASS }}"
-            - name: PG_PORT
-              value: {{ .Values.external_postgresql.PG_PORT }}
-            {{ else }}
-            - name: PG_HOST
-              value: "{{ .Release.Name }}-postgresql"
-            {{- if .Values.postgresql.existingSecret }}
-            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.postgresql.existingSecret }}
-                  key: {{ default "password" .Values.postgresql.existingSecretKey }}
+                  name: {{ include "tooljet.fullname" . }}-external-pg
+                  key: password
+            - name: PG_PORT
+              value: {{ .Values.external_postgresql.PG_PORT | quote }}
+            {{- else }}
+            - name: PG_HOST
+              value: {{ include "tooljet.postgresql.fullname" . | quote }}
+            - name: PG_USER
+              value: {{ .Values.postgresql.auth.username | quote }}
+            - name: PG_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "tooljet.postgresql.secretName" . }}
+                  key: password
+            - name: PG_PORT
+              value: "5432"
             {{- end }}
-            {{- end }}
-
             - name: ENABLE_TOOLJET_DB
-              value: {{ .Values.env.ENABLE_TOOLJET_DB }}
-
+              value: {{ .Values.env.ENABLE_TOOLJET_DB | quote }}
             - name: TOOLJET_DB
-              value: {{ .Values.env.TOOLJET_DB }}
-
-            {{ if .Values.tooljetdb_external_postgresql.enabled }}
+              value: {{ .Values.env.TOOLJET_DB | quote }}
+            {{- if .Values.tooljetdb_external_postgresql.enabled }}
             - name: TOOLJET_DB_HOST
-              value: "{{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_HOST }}"
-            - name: TOOLJET_DB_PASS
-              value: "{{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_PASS }}"
+              value: {{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_HOST | quote }}
             - name: TOOLJET_DB_USER
-              value: "{{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_USER }}"
-            {{ else }}
+              value: {{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_USER | quote }}
+            - name: TOOLJET_DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "tooljet.fullname" . }}-tooljetdb-external-pg
+                  key: password
+            {{- else }}
             - name: TOOLJET_DB_HOST
-              value: "{{ .Values.env.TOOLJET_DB_HOST }}"
+              value: {{ .Values.env.TOOLJET_DB_HOST | quote }}
             - name: TOOLJET_DB_USER
-              value: "{{ .Values.env.TOOLJET_DB_USER }}"
+              value: {{ .Values.env.TOOLJET_DB_USER | quote }}
             - name: TOOLJET_DB_PASS
-              value: "{{ .Values.env.TOOLJET_DB_PASS }}"
+              value: {{ .Values.env.TOOLJET_DB_PASS | quote }}
             {{- end }}
-
             - name: PGRST_HOST
               value: "tooljet-postgrest-service"
-
             - name: PGRST_JWT_SECRET
-              value: {{ .Values.env.jwt_secret }}
-
+              value: {{ .Values.env.jwt_secret | quote }}
             - name: REDIS_HOST
-              value: {{ .Values.redis_pod.REDIS_HOST }}
+              value: {{ .Values.redis_pod.REDIS_HOST | quote }}
             - name: REDIS_PORT
-              value: {{ .Values.redis_pod.REDIS_PORT }}
+              value: {{ .Values.redis_pod.REDIS_PORT | quote }}
             - name: REDIS_USER
-              value: {{ .Values.redis_pod.REDIS_USER }}
+              value: {{ .Values.redis_pod.REDIS_USER | quote }}
             - name: REDIS_PASSWORD
-              value: {{ .Values.redis_pod.REDIS_PASSWORD }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "tooljet.fullname" . }}-redis
+                  key: password
           envFrom:
             - secretRef:
                 name: {{ .Values.apps.tooljet.secret.name }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
