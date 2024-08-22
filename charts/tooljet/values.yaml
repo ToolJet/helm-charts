@@ -59,7 +59,7 @@ external_postgresql:
   PG_HOST: ""
   PG_USER: ""
   PG_PASS: ""
-  PG_PORT: "5432"
+  PG_PORT: '"5432"'
 
 env:
   DEPLOYMENT_PLATFORM: "k8s:helm"
@@ -81,13 +81,13 @@ tooljetdb_external_postgresql:
 
 redis_pod:
   REDIS_HOST: "redis-master"
-  REDIS_PORT: "6379"
+  REDIS_PORT: '"6379"'
 
 redis:
   fullnameOverride: redis
   usePassword: false
   auth:
-    enabled: false  
+    enabled: false
 
 autoscaling:
   enabled: false
