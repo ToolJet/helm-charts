@@ -41,7 +41,7 @@ ingress:
   tls: []
 
 postgresql:
-  enabled: false
+  enabled: true
   auth:
     username: "postgres"
     postgresPassword: "postgres"
@@ -49,12 +49,12 @@ postgresql:
     existingSecret: ""
 
 external_postgresql:
-  enabled: true
-  PG_HOST: "35.202.183.199"
-  PG_USER: "postgres"
-  PG_PASS: "qez8TPRahc5"
+  enabled: false
+  PG_HOST: ""
+  PG_USER: ""
+  PG_PASS: ""
   PG_PORT: "5432"
-  PG_DB: "testing-helm"
+  PG_DB: ""
   existingSecret: ""
 
 env:
@@ -64,17 +64,17 @@ env:
   ENABLE_TOOLJET_DB: "true"
   TOOLJET_DB_USER: "postgres"
   TOOLJET_DB_HOST: "tooljet-postgresql"
-  TOOLJET_DB_PASS: "qez8TPRahc5"
+  TOOLJET_DB_PASS: "postgres"
   TOOLJET_DB: "tooljet_db"
   PGRST_HOST: "tooljet-postgrest.default.svc.cluster.local"
 
 tooljetdb_external_postgresql:
-  enabled: true
-  TOOLJET_DB_USER: "postgres"
-  TOOLJET_DB_HOST: "35.202.183.199"
-  TOOLJET_DB_PASS: "qez8TPRahc5"
-  TOOLJET_DB: "tooljet_db_helm"
-  PGRST_DB_URI: "postgres://postgres:qez8TPRahc5@35.202.183.199/tooljet_db_helm"
+  enabled: false
+  TOOLJET_DB_USER: ""
+  TOOLJET_DB_HOST: ""
+  TOOLJET_DB_PASS: ""
+  TOOLJET_DB: ""
+  PGRST_DB_URI: ""
 
 redis:
   fullnameOverride: redis
@@ -106,15 +106,8 @@ postgrest:
   service:
     port: 80
     targetPort: 3000
+    type: NodePort
   logLevel: info
-  livenessProbe:
-    enabled: false
-    initialDelaySeconds: 30
-    periodSeconds: 10
-  readinessProbe:
-    enabled: false
-    initialDelaySeconds: 30
-    periodSeconds: 10
   resources: {}
     # limits:
     #   cpu: 100m

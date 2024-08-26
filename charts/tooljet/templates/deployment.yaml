@@ -31,13 +31,6 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.apps.tooljet.deployment.resources | nindent 12 }}
-          readinessProbe:
-            httpGet:
-              path: /api/health
-              port: http
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            failureThreshold: 6
           env:
             - name: TOOLJET_HOST
               value: {{ .Values.apps.tooljet.service.host | quote }}

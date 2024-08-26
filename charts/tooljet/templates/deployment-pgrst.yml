@@ -44,22 +44,6 @@ spec:
               value: {{ .Values.postgrest.logLevel | default "info" | quote }}
             - name: PGRST_SERVER_PORT
               value: "3000" 
-          {{- if .Values.postgrest.livenessProbe.enabled }}
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: {{ .Values.postgrest.livenessProbe.initialDelaySeconds | default 30 }}
-            periodSeconds: {{ .Values.postgrest.livenessProbe.periodSeconds | default 10 }}
-          {{- end }}
-          {{- if .Values.postgrest.readinessProbe.enabled }}
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: {{ .Values.postgrest.readinessProbe.initialDelaySeconds | default 30 }}
-            periodSeconds: {{ .Values.postgrest.readinessProbe.periodSeconds | default 10 }}
-          {{- end }}
           resources:
             {{- toYaml .Values.postgrest.resources | nindent 12 }}
       {{- with .Values.postgrest.nodeSelector }}
