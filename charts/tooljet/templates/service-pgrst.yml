@@ -5,20 +5,16 @@ metadata:
   labels:
     {{- include "tooljet.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgrest
-  {{- with .Values.postgrest.service.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
 spec:
-  type: {{ .Values.postgrest.service.type | default "ClusterIP" }}
-  ports:
-    - port: {{ .Values.postgrest.port }}
-      targetPort: {{ .Values.postgrest.targetPort }}
-      protocol: TCP
-      name: http
-      {{- if (and (eq .Values.postgrest.service.type "NodePort") (not (empty .Values.postgrest.service.nodePort))) }}
-      nodePort: {{ .Values.postgrest.service.nodePort }}
-      {{- end }}
   selector:
     {{- include "tooljet.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: postgrest
+  type: {{ .Values.postgrest.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.postgrest.service.port }}
+      targetPort: {{ .Values.postgrest.containerPort }}
+      protocol: TCP
+      {{- if and (eq .Values.postgrest.service.type "NodePort") .Values.postgrest.service.nodePort }}
+      nodePort: {{ .Values.postgrest.service.nodePort }}
+      {{- end }}

@@ -13,43 +13,37 @@ spec:
       app.kubernetes.io/component: postgrest
   template:
     metadata:
-      {{- with .Values.postgrest.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "tooljet.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: postgrest
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       containers:
         - name: postgrest
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.postgrest.image.repository }}:{{ .Values.postgrest.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.postgrest.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.postgrest.containerPort }}
               protocol: TCP
           env:
+            {{- if .Values.tooljetdb_external_postgresql.enabled }}
+            - name: PGRST_DB_URI
+              value: {{ .Values.tooljetdb_external_postgresql.PGRST_DB_URI }}
+            {{- else }}
             - name: PGRST_DB_URI
               valueFrom:
                 secretKeyRef:
                   name: {{ include "tooljet.fullname" . }}-postgrest
-                  key: db-uri
-            - name: PGRST_HOST
-              value: {{ include "tooljet.fullname" . }}-postgrest-service.{{ .Release.Namespace }}.svc.cluster.local
+                  key: PGRST_DB_URI
+            {{- end }}
             - name: PGRST_DB_ANON_ROLE
               value: postgres
             - name: PGRST_JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "tooljet.fullname" . }}-postgrest
-                  key: jwt-secret
+              value: {{ .Values.env.PGRST_JWT_SECRET }}
             - name: PGRST_LOG_LEVEL
               value: {{ .Values.postgrest.logLevel | default "info" | quote }}
+            - name: PGRST_SERVER_PORT
+              value: "3000" 
           {{- if .Values.postgrest.livenessProbe.enabled }}
           livenessProbe:
             httpGet:

@@ -20,10 +20,6 @@ spec:
       labels:
         {{- include "tooljet.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.apps.tooljet.deployment.image.repository }}:{{ .Values.apps.tooljet.deployment.image.tag | default .Chart.AppVersion }}"
@@ -45,45 +41,41 @@ spec:
           env:
             - name: TOOLJET_HOST
               value: {{ .Values.apps.tooljet.service.host | quote }}
-            {{- if .Values.external_postgresql.enabled }}
+            {{- if not .Values.external_postgresql.enabled }}
             - name: PG_HOST
-              value: {{ .Values.external_postgresql.PG_HOST | quote }}
-            - name: PG_USER
-              value: {{ .Values.external_postgresql.PG_USER | quote }}
-            - name: PG_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "tooljet.fullname" . }}-external-pg
-                  key: password
+              value: {{ include "tooljet.postgresql.host" . | quote }}
             - name: PG_PORT
-              value: {{ .Values.external_postgresql.PG_PORT | quote }}
-            {{- else }}
-            - name: PG_HOST
-              value: {{ include "tooljet.postgresql.fullname" . | quote }}
+              value: {{ include "tooljet.postgresql.port" . | quote }}
             - name: PG_USER
               value: {{ .Values.postgresql.auth.username | quote }}
             - name: PG_PASS
               valueFrom:
                 secretKeyRef:
                   name: {{ include "tooljet.postgresql.secretName" . }}
-                  key: password
+                  key: postgres-password
+            {{- else }}
+            - name: PG_HOST
+              value: {{ .Values.external_postgresql.PG_HOST | quote }}
             - name: PG_PORT
-              value: "5432"
+              value: {{ .Values.external_postgresql.PG_PORT | quote }}
+            - name: PG_USER
+              value: {{ .Values.external_postgresql.PG_USER | quote }}
+            - name: PG_PASS
+              value: {{ .Values.external_postgresql.PG_PASS | quote }}
+            - name: PG_DB
+              value: {{ .Values.external_postgresql.PG_DB | quote }}
             {{- end }}
             - name: ENABLE_TOOLJET_DB
               value: {{ .Values.env.ENABLE_TOOLJET_DB | quote }}
-            - name: TOOLJET_DB
-              value: {{ .Values.env.TOOLJET_DB | quote }}
             {{- if .Values.tooljetdb_external_postgresql.enabled }}
             - name: TOOLJET_DB_HOST
               value: {{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_HOST | quote }}
             - name: TOOLJET_DB_USER
               value: {{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_USER | quote }}
             - name: TOOLJET_DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "tooljet.fullname" . }}-tooljetdb-external-pg
-                  key: password
+              value: {{ .Values.tooljetdb_external_postgresql.TOOLJET_DB_PASS | quote }}
+            - name: TOOLJET_DB
+              value: {{ .Values.tooljetdb_external_postgresql.TOOLJET_DB | quote }}
             {{- else }}
             - name: TOOLJET_DB_HOST
               value: {{ .Values.env.TOOLJET_DB_HOST | quote }}
@@ -91,11 +83,13 @@ spec:
               value: {{ .Values.env.TOOLJET_DB_USER | quote }}
             - name: TOOLJET_DB_PASS
               value: {{ .Values.env.TOOLJET_DB_PASS | quote }}
+            - name: TOOLJET_DB
+              value: {{ .Values.env.TOOLJET_DB | quote }}
             {{- end }}
             - name: PGRST_HOST
-              value: "tooljet-postgrest-service"
+              value: "{{ include "tooljet.fullname" . }}-postgrest.{{ .Release.Namespace }}.svc.cluster.local"
             - name: PGRST_JWT_SECRET
-              value: {{ .Values.env.jwt_secret | quote }}
+              value: {{ .Values.env.PGRST_JWT_SECRET | quote }}
             - name: REDIS_HOST
               value: {{ .Values.redis_pod.REDIS_HOST | quote }}
             - name: REDIS_PORT
@@ -107,6 +101,16 @@ spec:
                 secretKeyRef:
                   name: {{ include "tooljet.fullname" . }}-redis
                   key: password
+            - name: LOCKBOX_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.apps.tooljet.secret.name }}
+                  key: LOCKBOX_MASTER_KEY
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.apps.tooljet.secret.name }}
+                  key: SECRET_KEY_BASE
           envFrom:
             - secretRef:
                 name: {{ .Values.apps.tooljet.secret.name }}

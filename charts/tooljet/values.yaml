@@ -8,29 +8,32 @@ apps:
       image:
         repository: tooljet/tooljet
         pullPolicy: Always
-        tag: EE-LTS-latest
+        tag: EE-LTS-2.50.9.30
       resources:
         requests:
-          memory: "1000Mi"
-          cpu: "1000m"
+          memory: "3Gi"
+          cpu: "2"
         limits:
-          memory: "2000Mi"
-          cpu: "2000m"
+          memory: "3Gi"
+          cpu: "2"
     hpa:
       enabled: false
       min: 1
       max: 1
       threshhold:
-        cpu: 0.75
-        ram: 768Mi
+        cpu: 1
+        ram: 1500Mi
     secret:
       name: tooljet-server
       data:
         lockbox_key: "0123456789ABCDEF"
         secret_key_base: "0123456789ABCDEF"
 
+tooljetservice:
+  port: 80
+
 ingress:
-  enabled: true
+  enabled: false
   hostname: tooljet.localhost
   ingressClassName: 'nginx'
   annotations:
@@ -38,56 +41,54 @@ ingress:
   tls: []
 
 postgresql:
-  enabled: true
-  postgresqlExtendedConf:
-    maxConnections: 1024
-  replication:
-    enabled: true
+  enabled: false
   auth:
     username: "postgres"
     postgresPassword: "postgres"
-    password: "postgres"
     database: "tooljet_production"
-  primary:
-    persistence:
-      enabled: true
-      size: 8Gi
-      storageClass: ""
+    existingSecret: ""
 
 external_postgresql:
-  enabled: false
-  PG_HOST: ""
-  PG_USER: ""
-  PG_PASS: ""
-  PG_PORT: '"5432"'
+  enabled: true
+  PG_HOST: "35.202.183.199"
+  PG_USER: "postgres"
+  PG_PASS: "qez8TPRahc5"
+  PG_PORT: "5432"
+  PG_DB: "testing-helm"
+  existingSecret: ""
 
 env:
   DEPLOYMENT_PLATFORM: "k8s:helm"
-  db_uri: "postgres://postgres:postgres@tooljet-postgresql.default.svc.cluster.local:5432/tooljet_db"
-  jwt_secret: "779ce303294a7d84a2aea9ff1ef1912f9ac57220a0dd2c0861a11ca5ae6c5817"
+  PGRST_DB_URI: "postgres://postgres:postgres@tooljet-postgresql.default.svc.cluster.local:5432/tooljet_db"
+  PGRST_JWT_SECRET: "779ce303294a7d84a2aea9ff1ef1912f9ac57220a0dd2c0861a11ca5ae6c5817"
   ENABLE_TOOLJET_DB: "true"
   TOOLJET_DB_USER: "postgres"
   TOOLJET_DB_HOST: "tooljet-postgresql"
-  TOOLJET_DB_PASS: "postgres"
+  TOOLJET_DB_PASS: "qez8TPRahc5"
   TOOLJET_DB: "tooljet_db"
   PGRST_HOST: "tooljet-postgrest.default.svc.cluster.local"
 
 tooljetdb_external_postgresql:
-  enabled: false
-  TOOLJET_DB_USER: ""
-  TOOLJET_DB_HOST: ""
-  TOOLJET_DB_PASS: ""
-  db_uri: ""
-
-redis_pod:
-  REDIS_HOST: "redis-master"
-  REDIS_PORT: '"6379"'
+  enabled: true
+  TOOLJET_DB_USER: "postgres"
+  TOOLJET_DB_HOST: "35.202.183.199"
+  TOOLJET_DB_PASS: "qez8TPRahc5"
+  TOOLJET_DB: "tooljet_db_helm"
+  PGRST_DB_URI: "postgres://postgres:qez8TPRahc5@35.202.183.199/tooljet_db_helm"
 
 redis:
   fullnameOverride: redis
-  usePassword: false
   auth:
-    enabled: false
+    enabled: true
+    password: "tooljet"
+  master:
+    service:
+      port: 6379
+
+redis_pod:
+  REDIS_HOST: "redis-master"
+  REDIS_PORT: "6379"
+  REDIS_USER: "default"
 
 autoscaling:
   enabled: false
@@ -96,14 +97,32 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 postgrest:
+  replicaCount: 1
   image:
     repository: postgrest/postgrest
     tag: v12.0.2
-    pullPolicy: IfNotPresent
-  targetPort: 3000
-  port: 80
+    pullPolicy: Always
   containerPort: 3000
   service:
-    type: ClusterIP
     port: 80
-    annotations: {}
+    targetPort: 3000
+  logLevel: info
+  livenessProbe:
+    enabled: false
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    enabled: false
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
