@@ -12,7 +12,6 @@ keywords:
 maintainers:
   - name: ToolJet
     url: https://github.com/ToolJet/ToolJet
-icon: https://docs.tooljet.com/img/logo.svg
 
 dependencies:
   - name: postgresql

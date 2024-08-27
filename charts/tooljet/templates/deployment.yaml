@@ -27,7 +27,7 @@ spec:
           args: ["npm", "run", "start:prod"]
           ports:
             - name: http
-              containerPort: 3000
+              containerPort: {{ .Values.apps.tooljet.service.port }}
               protocol: TCP
           resources:
             {{- toYaml .Values.apps.tooljet.deployment.resources | nindent 12 }}

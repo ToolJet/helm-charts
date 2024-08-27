@@ -43,7 +43,7 @@ spec:
             - name: PGRST_LOG_LEVEL
               value: {{ .Values.postgrest.logLevel | default "info" | quote }}
             - name: PGRST_SERVER_PORT
-              value: "3000" 
+              value: "3000"
           resources:
             {{- toYaml .Values.postgrest.resources | nindent 12 }}
       {{- with .Values.postgrest.nodeSelector }}
