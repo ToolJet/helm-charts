@@ -1,9 +1,6 @@
 apps:
   tooljet:
-    service:
-      type: ClusterIP
-      port: 3000
-      host: "http://tooljet.localhost"
+    containerPort: 3000
     deployment:
       image:
         repository: tooljet/tooljet
@@ -28,17 +25,10 @@ apps:
       data:
         lockbox_key: "0123456789ABCDEF"
         secret_key_base: "0123456789ABCDEF"
-
-tooljetservice:
-  port: 80
-
-ingress:
-  enabled: false
-  hostname: tooljet.localhost
-  ingressClassName: 'nginx'
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-  tls: []
+    service:
+      port: 80
+      targetPort: 3000
+      type: ClusterIP
 
 postgresql:
   enabled: true
@@ -48,16 +38,8 @@ postgresql:
     database: "tooljet_production"
     existingSecret: ""
 
-external_postgresql:
-  enabled: false
-  PG_HOST: ""
-  PG_USER: ""
-  PG_PASS: ""
-  PG_PORT: "5432"
-  PG_DB: ""
-  existingSecret: ""
-
 env:
+  TOOLJET_HOST: "http://tooljet.localhost"
   DEPLOYMENT_PLATFORM: "k8s:helm"
   PGRST_DB_URI: "postgres://postgres:postgres@tooljet-postgresql.default.svc.cluster.local:5432/tooljet_db"
   PGRST_JWT_SECRET: "779ce303294a7d84a2aea9ff1ef1912f9ac57220a0dd2c0861a11ca5ae6c5817"
@@ -68,6 +50,15 @@ env:
   TOOLJET_DB: "tooljet_db"
   PGRST_HOST: "tooljet-postgrest.default.svc.cluster.local"
 
+external_postgresql:
+  enabled: false
+  PG_HOST: ""
+  PG_USER: ""
+  PG_PASS: ""
+  PG_PORT: "5432"
+  PG_DB: ""
+  existingSecret: ""
+
 tooljetdb_external_postgresql:
   enabled: false
   TOOLJET_DB_USER: ""
@@ -75,26 +66,6 @@ tooljetdb_external_postgresql:
   TOOLJET_DB_PASS: ""
   TOOLJET_DB: ""
   PGRST_DB_URI: ""
-
-redis:
-  fullnameOverride: redis
-  auth:
-    enabled: true
-    password: "tooljet"
-  master:
-    service:
-      port: 6379
-
-redis_pod:
-  REDIS_HOST: "redis-master"
-  REDIS_PORT: "6379"
-  REDIS_USER: "default"
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
 
 postgrest:
   replicaCount: 1
@@ -119,3 +90,31 @@ postgrest:
   tolerations: []
   affinity: {}
   podAnnotations: {}
+
+redis:
+  fullnameOverride: redis
+  auth:
+    enabled: true
+    password: "tooljet"
+  master:
+    service:
+      port: 6379
+
+redis_pod:
+  REDIS_HOST: "redis-master"
+  REDIS_PORT: "6379"
+  REDIS_USER: "default"
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+ingress:
+  enabled: false
+  hostname: tooljet.localhost
+  ingressClassName: 'nginx'
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  tls: []

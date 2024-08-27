@@ -7,8 +7,8 @@ metadata:
 spec:
   type: {{ .Values.apps.tooljet.service.type }}
   ports:
-    - port: {{ .Values.tooljetservice.port }}
-      targetPort: {{ .Values.apps.tooljet.service.port }}
+    - port: {{ .Values.apps.tooljet.service.port }}
+      targetPort: {{ .Values.apps.tooljet.service.targetPort }}
       protocol: TCP
   selector:
     {{- include "tooljet.selectorLabels" . | nindent 4 }}
