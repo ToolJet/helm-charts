@@ -1,5 +1,6 @@
 apps:
   tooljet:
+    replicaCount: 1
     containerPort: 3000
     deployment:
       image:

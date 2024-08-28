@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: postgrest
-          image: "{{ .Values.postgrest.image.repository }}:{{ .Values.postgrest.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.postgrest.image.repository }}:{{ .Values.postgrest.image.tag }}"
           imagePullPolicy: {{ .Values.postgrest.image.pullPolicy }}
           ports:
             - name: http
