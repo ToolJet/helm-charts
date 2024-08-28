@@ -1,12 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "tooljet.fullname" . }}
+  name: {{ include "tooljet.fullname" . }}
+  labels:
+    {{- include "tooljet.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.apps.tooljet.service.type }}
   ports:
-  - port: 3000
-    protocol: TCP
-    targetPort: 3000
+    - port: {{ .Values.apps.tooljet.service.port }}
+      targetPort: {{ .Values.apps.tooljet.service.targetPort }}
+      protocol: TCP
   selector:
-    app: tooljet
+    {{- include "tooljet.selectorLabels" . | nindent 4 }}
