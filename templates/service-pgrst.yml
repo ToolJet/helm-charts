@@ -1,18 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: tooljet-postgrest-service
+  name: {{ include "tooljet.fullname" . }}-postgrest
   labels:
-    name: tooljet-postgrest
-  annotations:
-    meta.helm.sh/release-name: {{ .Release.Name }}
-    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+    {{- include "tooljet.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgrest
 spec:
   selector:
-    component: tooljet-postgrest
-  type: NodePort
+    {{- include "tooljet.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: postgrest
+  type: {{ .Values.postgrest.service.type }}
   ports:
     - name: http
-      port: {{ .Values.postgrest.port }}
-      targetPort: {{ .Values.postgrest.targetPort }}
+      port: {{ .Values.postgrest.service.port }}
+      targetPort: {{ .Values.postgrest.containerPort }}
       protocol: TCP
+      {{- if and (eq .Values.postgrest.service.type "NodePort") .Values.postgrest.service.nodePort }}
+      nodePort: {{ .Values.postgrest.service.nodePort }}
+      {{- end }}

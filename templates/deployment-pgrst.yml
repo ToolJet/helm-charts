@@ -1,66 +1,58 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tooljet-postgrest
+  name: {{ include "tooljet.fullname" . }}-postgrest
   labels:
-    app.kubernetes.io/name: tooljet-postgrest
-    app.kubernetes.io/instance: tooljet-postgrest
-    app.kubernetes.io/managed-by: tooljet-postgrest  
+    {{- include "tooljet.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgrest
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.postgrest.replicaCount | default 1 }}
   selector:
     matchLabels:
-      component: tooljet-postgrest # updated label here
+      {{- include "tooljet.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: postgrest
   template:
     metadata:
       labels:
-        component: tooljet-postgrest # added label here
-        app.kubernetes.io/name: tooljet-postgrest
-        app.kubernetes.io/instance: tooljet-postgrest
+        {{- include "tooljet.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: postgrest
     spec:
       containers:
-        - name: {{ .Chart.Name }}
+        - name: postgrest
+          image: "{{ .Values.postgrest.image.repository }}:{{ .Values.postgrest.image.tag }}"
+          imagePullPolicy: {{ .Values.postgrest.image.pullPolicy }}
           ports:
-          - containerPort: 3000        
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            - name: http
+              containerPort: {{ .Values.postgrest.containerPort }}
+              protocol: TCP
           env:
-            {{ if .Values.tooljetdb_external_postgresql.enabled}}
+            {{- if .Values.tooljetdb_external_postgresql.enabled }}
             - name: PGRST_DB_URI
-              value: {{ .Values.tooljetdb_external_postgresql.db_uri }}
-            {{ else }}
+              value: {{ .Values.tooljetdb_external_postgresql.PGRST_DB_URI }}
+            {{- else }}
             - name: PGRST_DB_URI
-              value: {{ .Values.env.db_uri }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "tooljet.fullname" . }}-postgrest
+                  key: PGRST_DB_URI
             {{- end }}
-
             - name: PGRST_DB_ANON_ROLE
               value: postgres
-                       
             - name: PGRST_JWT_SECRET
-              value: {{ .Values.env.jwt_secret }}
-
+              value: {{ .Values.env.PGRST_JWT_SECRET }}
             - name: PGRST_LOG_LEVEL
-              value: "info"          
-
-          # livenessProbe:
-          #  httpGet:
-          #    path: /
-          #    port: http
-          # readinessProbe:
-          #  httpGet:
-          #    path: /
-          #    port: 3000
+              value: {{ .Values.postgrest.logLevel | default "info" | quote }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.postgrest.resources | nindent 12 }}
+      {{- with .Values.postgrest.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+      {{- with .Values.postgrest.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
+      {{- end }}
+      {{- with .Values.postgrest.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
