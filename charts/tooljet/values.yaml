@@ -72,7 +72,7 @@ postgrest:
   replicaCount: 1
   image:
     repository: postgrest/postgrest
-    tag: v12.0.2
+    tag: v12.2.0
     pullPolicy: Always
   containerPort: 3000
   service:

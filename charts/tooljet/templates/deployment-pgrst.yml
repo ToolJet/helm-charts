@@ -42,6 +42,8 @@ spec:
               value: {{ .Values.env.PGRST_JWT_SECRET }}
             - name: PGRST_LOG_LEVEL
               value: {{ .Values.postgrest.logLevel | default "info" | quote }}
+            - name: PGRST_DB_PRE_CONFIG
+              value: postgrest.pre_config
           resources:
             {{- toYaml .Values.postgrest.resources | nindent 12 }}
       {{- with .Values.postgrest.nodeSelector }}
