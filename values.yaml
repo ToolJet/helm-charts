@@ -6,7 +6,7 @@ apps:
       image:
         repository: tooljet/tooljet
         pullPolicy: Always
-        tag: EE-LTS-latest
+        tag: ee-lts-latest
       resources:
         requests:
           memory: "3Gi"
