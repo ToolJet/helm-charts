@@ -5,7 +5,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 14.4.0
-    created: "2023-11-17T02:43:32.520172+05:30"
+    created: "2024-11-21T14:30:53.13248+05:30"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -33,14 +33,14 @@ entries:
     - https://github.com/bitnami/bitnami-docker-postgresql
     - https://www.postgresql.org/
     urls:
-    - charts/postgresql-11.6.19.tgz
+    - https://tooljet.github.io/helm-charts/charts/postgresql-11.6.19.tgz
     version: 11.6.19
   redis:
   - annotations:
       category: Database
     apiVersion: v2
     appVersion: 6.2.7
-    created: "2023-11-17T02:43:32.527023+05:30"
+    created: "2024-11-21T14:30:53.13699+05:30"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -66,12 +66,119 @@ entries:
     sources:
     - https://github.com/bitnami/bitnami-docker-redis
     urls:
-    - charts/redis-16.13.2.tgz
+    - https://tooljet.github.io/helm-charts/charts/redis-16.13.2.tgz
     version: 16.13.2
   tooljet:
   - apiVersion: v2
+    created: "2024-11-21T14:30:53.254481+05:30"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.19
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: ToolJet is an open-source low-code framework to build and deploy
+      internal tools quickly without much effort from the engineering teams.
+    digest: 230c1f170c0e8fabee6fc9c8dee876e2c899ae1d565fcfd4c6fd8978e7d4b5ca
+    home: https://www.tooljet.com/
+    keywords:
+    - lowcode
+    - internal-tools
+    maintainers:
+    - name: ToolJet
+      url: https://github.com/ToolJet/ToolJet
+    name: tooljet
+    sources:
+    - https://github.com/ToolJet/ToolJet
+    type: application
+    urls:
+    - https://tooljet.github.io/helm-charts/charts/tooljet-3.0.1.tgz
+    version: 3.0.1
+  - apiVersion: v2
+    created: "2024-11-21T14:30:53.247289+05:30"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.19
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: ToolJet is an open-source low-code framework to build and deploy
+      internal tools quickly without much effort from the engineering teams.
+    digest: 8ff433a8fc52b624d812b7c2f6d26e77f178efb0c3aa76538fce14e7fac098fe
+    home: https://www.tooljet.com/
+    keywords:
+    - lowcode
+    - internal-tools
+    maintainers:
+    - name: ToolJet
+      url: https://github.com/ToolJet/ToolJet
+    name: tooljet
+    sources:
+    - https://github.com/ToolJet/ToolJet
+    type: application
+    urls:
+    - https://tooljet.github.io/helm-charts/charts/tooljet-3.0.0.tgz
+    version: 3.0.0
+  - apiVersion: v2
+    created: "2024-11-21T14:30:53.227542+05:30"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.19
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: ToolJet is an open-source low-code framework to build and deploy
+      internal tools quickly without much effort from the engineering teams.
+    digest: 824879be88632d6f2fc45881463da81e532368dc2d09f560d7d41cca78c824b8
+    home: https://www.tooljet.com/
+    keywords:
+    - lowcode
+    - internal-tools
+    maintainers:
+    - name: ToolJet
+      url: https://github.com/ToolJet/ToolJet
+    name: tooljet
+    sources:
+    - https://github.com/ToolJet/ToolJet
+    type: application
+    urls:
+    - https://tooljet.github.io/helm-charts/charts/tooljet-2.26.0.tgz
+    version: 2.26.0
+  - apiVersion: v2
+    appVersion: v2.25.1
+    created: "2024-11-21T14:30:53.26154+05:30"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.19
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: ToolJet is an open-source low-code framework to build and deploy
+      internal tools quickly without much effort from the engineering teams.
+    digest: 42658c5aaad3e7359e2af3cbd74be9577feba6261fed116f2fbb27495072b5ee
+    maintainers:
+    - email: akshay@tooljet.io
+      name: akshay-sasidharan
+    name: tooljet
+    type: application
+    urls:
+    - https://tooljet.github.io/helm-charts/charts/tooljet-v2.25.1.tgz
+    version: v2.25.1
+  - apiVersion: v2
     appVersion: v2.25.0
-    created: "2023-11-17T02:43:32.608018+05:30"
+    created: "2024-11-21T14:30:53.219342+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -90,11 +197,11 @@ entries:
     name: tooljet
     type: application
     urls:
-    - charts/tooljet-2.25.0.tgz
+    - https://tooljet.github.io/helm-charts/charts/tooljet-2.25.0.tgz
     version: 2.25.0
   - apiVersion: v2
     appVersion: v2.24.0
-    created: "2023-11-17T02:43:32.598797+05:30"
+    created: "2024-11-21T14:30:53.207845+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -113,11 +220,11 @@ entries:
     name: tooljet
     type: application
     urls:
-    - charts/tooljet-2.24.0.tgz
+    - https://tooljet.github.io/helm-charts/charts/tooljet-2.24.0.tgz
     version: 2.24.0
   - apiVersion: v2
     appVersion: v1.21.5
-    created: "2023-11-17T02:43:32.621218+05:30"
+    created: "2024-11-21T14:30:53.24066+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -136,6 +243,6 @@ entries:
     name: tooljet
     type: application
     urls:
-    - charts/tooljet-2.6.0.tgz
+    - https://tooljet.github.io/helm-charts/charts/tooljet-2.6.0.tgz
     version: 2.6.0
-generated: "2023-11-17T02:43:32.515345+05:30"
+generated: "2024-11-21T14:30:53.12293+05:30"
