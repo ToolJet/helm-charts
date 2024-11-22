@@ -29,12 +29,13 @@ spec:
             {{- if .Values.tooljetdb_external_postgresql.enabled }}
             - name: PGRST_DB_URI
               value: {{ .Values.tooljetdb_external_postgresql.PGRST_DB_URI }}
+            - name: PGRST_DB_PRE_CONFIG
+              value: postgrest.pre_config
             {{- else }}
+            - name: PGRST_DB_PRE_CONFIG
+              value: postgrest.pre_config
             - name: PGRST_DB_URI
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "tooljet.fullname" . }}-postgrest
-                  key: PGRST_DB_URI
+              value: {{ .Values.env.PGRST_DB_URI }}
             {{- end }}
             - name: PGRST_DB_ANON_ROLE
               value: postgres
@@ -42,8 +43,6 @@ spec:
               value: {{ .Values.env.PGRST_JWT_SECRET }}
             - name: PGRST_LOG_LEVEL
               value: {{ .Values.postgrest.logLevel | default "info" | quote }}
-            - name: PGRST_DB_PRE_CONFIG
-              value: postgrest.pre_config
           resources:
             {{- toYaml .Values.postgrest.resources | nindent 12 }}
       {{- with .Values.postgrest.nodeSelector }}

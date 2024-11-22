@@ -36,20 +36,20 @@ postgresql:
   auth:
     username: "postgres"
     postgresPassword: "postgres"
-    database: "tooljet_production"
+    database: "tooljet_prod"
     existingSecret: ""
 
 env:
   TOOLJET_HOST: "http://tooljet.localhost"
   DEPLOYMENT_PLATFORM: "k8s:helm"
-  PGRST_DB_URI: "postgres://postgres:postgres@tooljet-postgresql.default.svc.cluster.local:5432/tooljet_db"
+  PGRST_DB_URI: "postgres://postgres:postgres@tooljet-postgresql:5432/tooljet_db"
   PGRST_JWT_SECRET: "779ce303294a7d84a2aea9ff1ef1912f9ac57220a0dd2c0861a11ca5ae6c5817"
   ENABLE_TOOLJET_DB: "true"
   TOOLJET_DB_USER: "postgres"
   TOOLJET_DB_HOST: "tooljet-postgresql"
   TOOLJET_DB_PASS: "postgres"
   TOOLJET_DB: "tooljet_db"
-  PGRST_HOST: "tooljet-postgrest.default.svc.cluster.local"
+  PGRST_HOST: "tooljet-postgrest"
 
 external_postgresql:
   enabled: false
