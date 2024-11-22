@@ -6,7 +6,7 @@ metadata:
     {{- include "tooljet.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.tooljet.replicaCount }}
+  replicas: {{ .Values.apps.tooljet.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
