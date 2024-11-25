@@ -74,10 +74,10 @@ postgrest:
     repository: postgrest/postgrest
     tag: v12.2.0
     pullPolicy: Always
-  containerPort: 3000
+  containerPort: 3001
   service:
     port: 80
-    targetPort: 3000
+    targetPort: 3001
     type: NodePort
   logLevel: info
   resources: {}
