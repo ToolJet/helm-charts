@@ -49,7 +49,7 @@ env:
   TOOLJET_DB_HOST: "tooljet-postgresql"
   TOOLJET_DB_PASS: "postgres"
   TOOLJET_DB: "tooljet_db"
-  PGRST_HOST: "tooljet-postgrest"
+  PGRST_HOST: "tooljet-postgrest:3001"
 
 external_postgresql:
   enabled: false
@@ -76,9 +76,10 @@ postgrest:
     pullPolicy: Always
   containerPort: 3001
   service:
-    port: 80
+    port: 3001
     targetPort: 3001
     type: NodePort
+    nodePort: 32757
   logLevel: info
   resources: {}
     # limits:
@@ -90,7 +91,7 @@ postgrest:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-  podAnnotations: {}
+  podAnnotations: {}  
 
 redis:
   fullnameOverride: redis
@@ -113,7 +114,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 ingress:
-  enabled: false
+  enabled: true
   hostname: tooljet.localhost
   ingressClassName: 'nginx'
   annotations:
