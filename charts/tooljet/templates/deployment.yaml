@@ -80,7 +80,7 @@ spec:
               value: {{ .Values.env.TOOLJET_DB | quote }}
             {{- end }}
             - name: PGRST_HOST
-              value: "{{ include "tooljet.fullname" . }}-postgrest.{{ .Release.Namespace }}.svc.cluster.local"
+              value: {{ .Values.env.PGRST_HOST }}
             - name: PGRST_JWT_SECRET
               value: {{ .Values.env.PGRST_JWT_SECRET | quote }}
             - name: REDIS_HOST
