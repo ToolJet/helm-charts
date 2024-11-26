@@ -114,7 +114,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 ingress:
-  enabled: false
+  enabled: true
   hostname: tooljet.localhost
   ingressClassName: 'nginx'
   annotations:
