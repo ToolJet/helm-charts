@@ -5,7 +5,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 14.4.0
-    created: "2024-11-26T01:01:42.347826+05:30"
+    created: "2024-11-26T18:25:25.741602+05:30"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -40,7 +40,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.7
-    created: "2024-11-26T01:01:42.351844+05:30"
+    created: "2024-11-26T18:25:25.74865+05:30"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -70,7 +70,35 @@ entries:
     version: 16.13.2
   tooljet:
   - apiVersion: v2
-    created: "2024-11-26T01:01:42.507497+05:30"
+    created: "2024-11-26T18:25:25.917946+05:30"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.19
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: ToolJet is an open-source low-code framework to build and deploy
+      internal tools quickly without much effort from the engineering teams.
+    digest: 3006c187005063061b9a2cef561e37ece0a02c94048d0287bb1ce259d7094312
+    home: https://www.tooljet.com/
+    keywords:
+    - lowcode
+    - internal-tools
+    maintainers:
+    - name: ToolJet
+      url: https://github.com/ToolJet/ToolJet
+    name: tooljet
+    sources:
+    - https://github.com/ToolJet/ToolJet
+    type: application
+    urls:
+    - https://tooljet.github.io/helm-charts/charts/tooljet-3.0.6.tgz
+    version: 3.0.6
+  - apiVersion: v2
+    created: "2024-11-26T18:25:25.909989+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -98,7 +126,7 @@ entries:
     - https://tooljet.github.io/helm-charts/charts/tooljet-3.0.5.tgz
     version: 3.0.5
   - apiVersion: v2
-    created: "2024-11-26T01:01:42.500206+05:30"
+    created: "2024-11-26T18:25:25.902343+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -126,7 +154,7 @@ entries:
     - https://tooljet.github.io/helm-charts/charts/tooljet-3.0.4.tgz
     version: 3.0.4
   - apiVersion: v2
-    created: "2024-11-26T01:01:42.492904+05:30"
+    created: "2024-11-26T18:25:25.894099+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -154,7 +182,7 @@ entries:
     - https://tooljet.github.io/helm-charts/charts/tooljet-3.0.3.tgz
     version: 3.0.3
   - apiVersion: v2
-    created: "2024-11-26T01:01:42.486258+05:30"
+    created: "2024-11-26T18:25:25.885694+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -182,7 +210,7 @@ entries:
     - https://tooljet.github.io/helm-charts/charts/tooljet-3.0.2.tgz
     version: 3.0.2
   - apiVersion: v2
-    created: "2024-11-26T01:01:42.477376+05:30"
+    created: "2024-11-26T18:25:25.877472+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -210,7 +238,7 @@ entries:
     - https://tooljet.github.io/helm-charts/charts/tooljet-3.0.1.tgz
     version: 3.0.1
   - apiVersion: v2
-    created: "2024-11-26T01:01:42.468505+05:30"
+    created: "2024-11-26T18:25:25.868534+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -238,7 +266,7 @@ entries:
     - https://tooljet.github.io/helm-charts/charts/tooljet-3.0.0.tgz
     version: 3.0.0
   - apiVersion: v2
-    created: "2024-11-26T01:01:42.446204+05:30"
+    created: "2024-11-26T18:25:25.846722+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -267,7 +295,7 @@ entries:
     version: 2.26.0
   - apiVersion: v2
     appVersion: v2.25.1
-    created: "2024-11-26T01:01:42.514787+05:30"
+    created: "2024-11-26T18:25:25.926243+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -290,7 +318,7 @@ entries:
     version: v2.25.1
   - apiVersion: v2
     appVersion: v2.25.0
-    created: "2024-11-26T01:01:42.434809+05:30"
+    created: "2024-11-26T18:25:25.838671+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -313,7 +341,7 @@ entries:
     version: 2.25.0
   - apiVersion: v2
     appVersion: v2.24.0
-    created: "2024-11-26T01:01:42.42564+05:30"
+    created: "2024-11-26T18:25:25.828196+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -336,7 +364,7 @@ entries:
     version: 2.24.0
   - apiVersion: v2
     appVersion: v1.21.5
-    created: "2024-11-26T01:01:42.460068+05:30"
+    created: "2024-11-26T18:25:25.861158+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -357,4 +385,4 @@ entries:
     urls:
     - https://tooljet.github.io/helm-charts/charts/tooljet-2.6.0.tgz
     version: 2.6.0
-generated: "2024-11-26T01:01:42.340131+05:30"
+generated: "2024-11-26T18:25:25.736802+05:30"
