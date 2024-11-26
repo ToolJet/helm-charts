@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "tooljet.labels" . | nindent 4 }}
     app.kubernetes.io/component: tooljet-postgrest
+    app.kubernetes.io/instance: tooljet-postgrest
+    app.kubernetes.io/name: tooljet-postgrest
 spec:
   selector:
     {{- include "tooljet.selectorLabels" . | nindent 4 }}
