@@ -7,7 +7,7 @@ This setup comes with an included PostgreSQL server out of the box which is enab
 
 ### From Helm repo
 ```bash
-helm repo add tooljet https://tooljet.github.io/helm-charts
+helm repo add tooljet https://github.com/ToolJet/helm-charts.git
 helm install tooljet tooljet/tooljet
 ```
 
