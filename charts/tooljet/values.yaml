@@ -4,9 +4,9 @@ apps:
     containerPort: 3000
     deployment:
       image:
-        repository: tooljet/tooljet-te-ee
+        repository: tooljet/tooljet
         pullPolicy: Always
-        tag: workflow-k8s-3
+        tag: ee-lts-latest
       resources:
         requests:
           memory: "3Gi"
