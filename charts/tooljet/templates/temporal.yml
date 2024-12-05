@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temporal
+  template:
+    metadata:
+      labels:
+        app: temporal
+    spec:
+      containers:
+        - name: temporal
+          image: temporalio/auto-setup:1.25.1
+          env:
+            - name: DB
+              value: postgres12
+            - name: DB_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              value: temporal
+            - name: POSTGRES_PWD
+              value: temporal
+            - name: POSTGRES_SEEDS
+              value: temporal-postgresql
+          ports:
+            - containerPort: 7233
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporal
+  namespace: default
+spec:
+  ports:
+    - name: rpc
+      port: 7233
+      targetPort: 7233
+  selector:
+    app: temporal
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: temporal-postgresql-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal-postgresql
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temporal-postgresql
+  template:
+    metadata:
+      labels:
+        app: temporal-postgresql
+    spec:
+      containers:
+        - name: temporal-postgresql
+          image: postgres:13
+          env:
+            - name: POSTGRES_USER
+              value: temporal
+            - name: POSTGRES_PASSWORD
+              value: temporal
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: temporal-postgresql-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporal-postgresql
+  namespace: default
+spec:
+  ports:
+    - name: db
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: temporal-postgresql

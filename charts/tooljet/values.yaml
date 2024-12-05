@@ -4,9 +4,9 @@ apps:
     containerPort: 3000
     deployment:
       image:
-        repository: tooljet/tooljet
+        repository: tooljet/tooljet-te-ee
         pullPolicy: Always
-        tag: ee-lts-latest
+        tag: workflow-k8s-3
       resources:
         requests:
           memory: "3Gi"
@@ -50,6 +50,13 @@ env:
   TOOLJET_DB_PASS: "postgres"
   TOOLJET_DB: "tooljet_db"
   PGRST_HOST: "tooljet-postgrest:3001"
+
+workflow_env:
+  ENABLE_WORKFLOW_SCHEDULING: "true"
+  TEMPORAL_SERVER_ADDRESS: "temporal:7233"
+  TEMPORAL_TASK_QUEUE_NAME_FOR_WORKFLOWS: "tooljet-workflows"
+  TOOLJET_WORKFLOWS_TEMPORAL_NAMESPACE: "default"
+  WORKER: "true"
 
 external_postgresql:
   enabled: false
@@ -114,7 +121,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 ingress:
-  enabled: true
+  enabled: false
   hostname: tooljet.localhost
   ingressClassName: 'nginx'
   annotations:
