@@ -56,7 +56,7 @@ workflow_env:
   TEMPORAL_SERVER_ADDRESS: "temporal:7233"
   TEMPORAL_TASK_QUEUE_NAME_FOR_WORKFLOWS: "tooljet-workflows"
   TOOLJET_WORKFLOWS_TEMPORAL_NAMESPACE: "default"
-  WORKER: "true"
+  WORKLOW_WORKER: "true"
 
 external_postgresql:
   enabled: false
