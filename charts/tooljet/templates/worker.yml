@@ -89,8 +89,6 @@ spec:
               value: {{ .Values.workflow_env.TEMPORAL_TASK_QUEUE_NAME_FOR_WORKFLOWS }}
             - name: TOOLJET_WORKFLOWS_TEMPORAL_NAMESPACE
               value: {{ .Values.workflow_env.TOOLJET_WORKFLOWS_TEMPORAL_NAMESPACE }}
-            - name: TOOLJET_SERVER_URL
-              value: http://{{ include "tooljet.fullname" . }}
             - name: WORKER
               value: {{ .Values.workflow_env.WORKER | quote }}
             - name: PGRST_HOST
