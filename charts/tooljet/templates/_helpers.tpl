@@ -35,12 +35,12 @@ Common labels
 */}}
 {{- define "tooljet.labels" -}}
 helm.sh/chart: {{ include "tooljet.chart" . }}
-{{ include "tooljet.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
+
 
 {{/*
 Selector labels
