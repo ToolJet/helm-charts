@@ -4,15 +4,14 @@ metadata:
   name: {{ include "tooljet.fullname" . }}-postgrest
   labels:
     {{- include "tooljet.labels" . | nindent 4 }}
-    app.kubernetes.io/component: tooljet-postgrest
-    app.kubernetes.io/instance: tooljet-postgrest
-    app.kubernetes.io/name: tooljet-postgrest
+    app.kubernetes.io/component: {{ .Release.Name }}-postgrest
+    app.kubernetes.io/instance: {{ .Release.Name }}-postgrest
+    app.kubernetes.io/name: {{ .Release.Name }}-postgrest
 spec:
   selector:
-    {{- include "tooljet.selectorLabels" . | nindent 4 }}
-    app.kubernetes.io/component: tooljet-postgrest
-    app.kubernetes.io/instance: tooljet-postgrest
-    app.kubernetes.io/name: tooljet-postgrest
+    app.kubernetes.io/component: {{ .Release.Name }}-postgrest
+    app.kubernetes.io/instance: {{ .Release.Name }}-postgrest
+    app.kubernetes.io/name: {{ .Release.Name }}-postgrest
   type: {{ .Values.postgrest.service.type }}
   ports:
     - name: http

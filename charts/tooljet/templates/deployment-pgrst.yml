@@ -4,24 +4,22 @@ metadata:
   name: {{ include "tooljet.fullname" . }}-postgrest
   labels:
     {{- include "tooljet.labels" . | nindent 4 }}
-    app.kubernetes.io/component: tooljet-postgrest
-    app.kubernetes.io/instance: tooljet-postgrest
-    app.kubernetes.io/name: tooljet-postgrest
+    app.kubernetes.io/component: {{ .Release.Name }}-postgrest
+    app.kubernetes.io/instance: {{ .Release.Name }}-postgrest
+    app.kubernetes.io/name: {{ .Release.Name }}-postgrest
 spec:
   replicas: {{ .Values.postgrest.replicaCount | default 1 }}
   selector:
     matchLabels:
-      {{- include "tooljet.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: tooljet-postgrest
-      app.kubernetes.io/instance: tooljet-postgrest
-      app.kubernetes.io/name: tooljet-postgrest
+      app.kubernetes.io/component: {{ .Release.Name }}-postgrest
+      app.kubernetes.io/instance: {{ .Release.Name }}-postgrest
+      app.kubernetes.io/name: {{ .Release.Name }}-postgrest
   template:
     metadata:
       labels:
-        {{- include "tooljet.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: tooljet-postgrest
-        app.kubernetes.io/instance: tooljet-postgrest
-        app.kubernetes.io/name: tooljet-postgrest
+        app.kubernetes.io/component: {{ .Release.Name }}-postgrest
+        app.kubernetes.io/instance: {{ .Release.Name }}-postgrest
+        app.kubernetes.io/name: {{ .Release.Name }}-postgrest
     spec:
       containers:
         - name: postgrest
