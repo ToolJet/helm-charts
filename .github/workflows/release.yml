@@ -13,6 +13,18 @@ jobs:
         with:
           fetch-depth: 0
 
+
+      - name: Package Helm Chart
+        run: |
+          helm package charts/tooljet --destination charts/
+
+      - name: Update index.yaml
+        run: |
+          helm repo index charts/ --url https://slancerk.github.io/helm-charts-artifactory-test/charts/
+          git add charts/index.yaml
+          git commit -m "Update Helm repo index"
+          git push origin setup-chart-release  
+
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
