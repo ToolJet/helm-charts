@@ -3,16 +3,10 @@ kind: Service
 metadata:
   name: {{ include "tooljet.fullname" . }}-postgrest
   labels:
-    {{- include "tooljet.labels" . | nindent 4 }}
-    app.kubernetes.io/component: tooljet-postgrest
-    app.kubernetes.io/instance: tooljet-postgrest
-    app.kubernetes.io/name: tooljet-postgrest
+    {{- include "tooljet-postgrest.labels" . | nindent 4 }}
 spec:
   selector:
-    {{- include "tooljet.selectorLabels" . | nindent 4 }}
-    app.kubernetes.io/component: tooljet-postgrest
-    app.kubernetes.io/instance: tooljet-postgrest
-    app.kubernetes.io/name: tooljet-postgrest
+    {{- include "tooljet-postgrest.selectorLabels" . | nindent 4 }}
   type: {{ .Values.postgrest.service.type }}
   ports:
     - name: http
