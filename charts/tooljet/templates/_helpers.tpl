@@ -51,6 +51,27 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Postgrest labels
+*/}}
+{{- define "tooljet-postgrest.labels" -}}
+helm.sh/chart: {{ include "tooljet.chart" . }}
+{{ include "tooljet-postgrest.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Postgrest Selector labels
+*/}}
+{{- define "tooljet-postgrest.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "tooljet.name" . }}-postgrest
+app.kubernetes.io/component: {{ include "tooljet.name" . }}-postgrest
+app.kubernetes.io/instance: {{ .Release.Name }}-postgrest
+{{- end }}
+
+{{/*
 Create a default fully qualified postgresql name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
