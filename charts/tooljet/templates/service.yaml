@@ -4,6 +4,7 @@ metadata:
   name: {{ include "tooljet.fullname" . }}
   labels:
     {{- include "tooljet.labels" . | nindent 4 }}
+    {{- include "tooljet.selectorLabels" . | nindent 4 }}
 spec:
   type: {{ .Values.apps.tooljet.service.type }}
   ports:
