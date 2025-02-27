@@ -1,6 +1,6 @@
 apiVersion: v2
 name: tooljet
-version: 3.0.8
+version: 3.0.9
 description: ToolJet is an open-source low-code framework to build and deploy internal tools quickly without much effort from the engineering teams.
 type: application
 home: https://www.tooljet.com/
