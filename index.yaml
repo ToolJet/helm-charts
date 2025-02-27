@@ -5,7 +5,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 14.4.0
-    created: "2025-02-13T13:43:08.262141+05:30"
+    created: "2025-02-27T12:44:40.001655+05:30"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -40,7 +40,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.7
-    created: "2025-02-13T13:43:08.266126+05:30"
+    created: "2025-02-27T12:44:40.005715+05:30"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -70,7 +70,35 @@ entries:
     version: 16.13.2
   tooljet:
   - apiVersion: v2
-    created: "2025-02-13T13:43:08.42307+05:30"
+    created: "2025-02-27T12:44:39.998326+05:30"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.19
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: ToolJet is an open-source low-code framework to build and deploy
+      internal tools quickly without much effort from the engineering teams.
+    digest: d8439a2bdc7bf19e05554098952432c5282b104329996512126f67f67cc4b64c
+    home: https://www.tooljet.com/
+    keywords:
+    - lowcode
+    - internal-tools
+    maintainers:
+    - name: ToolJet
+      url: https://github.com/ToolJet/ToolJet
+    name: tooljet
+    sources:
+    - https://github.com/ToolJet/ToolJet
+    type: application
+    urls:
+    - tooljet-3.0.8.tgz
+    version: 3.0.8
+  - apiVersion: v2
+    created: "2025-02-27T12:44:40.162455+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -98,7 +126,7 @@ entries:
     - charts/tooljet-3.0.7.tgz
     version: 3.0.7
   - apiVersion: v2
-    created: "2025-02-13T13:43:08.415958+05:30"
+    created: "2025-02-27T12:44:40.155384+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -126,7 +154,7 @@ entries:
     - charts/tooljet-3.0.6.tgz
     version: 3.0.6
   - apiVersion: v2
-    created: "2025-02-13T13:43:08.407637+05:30"
+    created: "2025-02-27T12:44:40.148352+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -154,7 +182,7 @@ entries:
     - charts/tooljet-3.0.5.tgz
     version: 3.0.5
   - apiVersion: v2
-    created: "2025-02-13T13:43:08.400386+05:30"
+    created: "2025-02-27T12:44:40.141386+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -182,7 +210,7 @@ entries:
     - charts/tooljet-3.0.4.tgz
     version: 3.0.4
   - apiVersion: v2
-    created: "2025-02-13T13:43:08.393249+05:30"
+    created: "2025-02-27T12:44:40.134752+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -210,7 +238,7 @@ entries:
     - charts/tooljet-3.0.3.tgz
     version: 3.0.3
   - apiVersion: v2
-    created: "2025-02-13T13:43:08.385954+05:30"
+    created: "2025-02-27T12:44:40.12733+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -238,7 +266,7 @@ entries:
     - charts/tooljet-3.0.2.tgz
     version: 3.0.2
   - apiVersion: v2
-    created: "2025-02-13T13:43:08.378729+05:30"
+    created: "2025-02-27T12:44:40.12004+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -266,7 +294,7 @@ entries:
     - charts/tooljet-3.0.1.tgz
     version: 3.0.1
   - apiVersion: v2
-    created: "2025-02-13T13:43:08.371995+05:30"
+    created: "2025-02-27T12:44:40.113154+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -294,7 +322,7 @@ entries:
     - charts/tooljet-3.0.0.tgz
     version: 3.0.0
   - apiVersion: v2
-    created: "2025-02-13T13:43:08.35229+05:30"
+    created: "2025-02-27T12:44:40.093406+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -323,7 +351,7 @@ entries:
     version: 2.26.0
   - apiVersion: v2
     appVersion: v2.25.1
-    created: "2025-02-13T13:43:08.430637+05:30"
+    created: "2025-02-27T12:44:40.169357+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -346,7 +374,7 @@ entries:
     version: v2.25.1
   - apiVersion: v2
     appVersion: v2.25.0
-    created: "2025-02-13T13:43:08.343983+05:30"
+    created: "2025-02-27T12:44:40.085524+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -369,7 +397,7 @@ entries:
     version: 2.25.0
   - apiVersion: v2
     appVersion: v2.24.0
-    created: "2025-02-13T13:43:08.335383+05:30"
+    created: "2025-02-27T12:44:40.075228+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -392,7 +420,7 @@ entries:
     version: 2.24.0
   - apiVersion: v2
     appVersion: v1.21.5
-    created: "2025-02-13T13:43:08.363933+05:30"
+    created: "2025-02-27T12:44:40.105917+05:30"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -413,4 +441,4 @@ entries:
     urls:
     - charts/tooljet-2.6.0.tgz
     version: 2.6.0
-generated: "2025-02-13T13:43:08.257534+05:30"
+generated: "2025-02-27T12:44:39.985757+05:30"
