@@ -94,6 +94,7 @@ postgrest:
   podAnnotations: {}  
 
 redis:
+  enabled: false
   fullnameOverride: redis
   auth:
     enabled: true
