@@ -95,6 +95,7 @@ postgrest:
 
 redis:
   enabled: false
+  architecture: standalone # Use in case multiple tooljet pods running
   fullnameOverride: redis
   auth:
     enabled: true
@@ -115,7 +116,10 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 ingress:
-  enabled: false
+  enabled: true
+  ingressClassName: traefik # comment this line in case using nginx
+  type: traefik   # use 'nginx' in case using nginx
   hostname: tooljet.localhost
-  ingressClassName: 'nginx'
-  tls: []
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure   # use in case using traefik
+    # nginx.ingress.kubernetes.io/rewrite-target: /    # use in case using nginx
