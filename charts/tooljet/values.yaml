@@ -116,7 +116,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 ingress:
-  enabled: true
+  enabled: false
   ingressClassName: traefik # comment this line in case using nginx
   type: traefik   # use 'nginx' in case using nginx
   hostname: tooljet.localhost
