@@ -116,7 +116,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 ingress:
-  enabled: true
+  enabled: false
   type: nginx   # traefik
 
   traefik:
