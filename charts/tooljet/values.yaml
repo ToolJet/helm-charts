@@ -116,10 +116,19 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 ingress:
-  enabled: false
-  ingressClassName: traefik # comment this line in case using nginx
-  type: traefik   # use 'nginx' in case using nginx
-  hostname: tooljet.localhost
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure   # use in case using traefik
-    # nginx.ingress.kubernetes.io/rewrite-target: /    # use in case using nginx
+  enabled: true
+  type: nginx   # traefik
+
+  traefik:
+    hostname: tooljet.localhost
+    ingressClassName: traefik
+    tls: []
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+
+  nginx:
+    hostname: tooljet.localhost
+    ingressClassName: nginx
+    tls: []
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
