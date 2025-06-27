@@ -124,15 +124,19 @@ Return the PostgreSQL Secret Name
 {{- end }}
 
 {{/*
-Return the appropriate apiVersion for ingress.
+Returns the correct ingress class name based on selected controller.
 */}}
-{{- define "tooljet.ingress.apiVersion" -}}
-{{- if semverCompare "<1.14-0" .Capabilities.KubeVersion.GitVersion -}}
-{{- print "extensions/v1beta1" -}}
-{{- else -}}
-{{- print "networking.k8s.io/v1" -}}
-{{- end -}}
-{{- end -}}
+{{- define "tooljet.ingressClassName" -}}
+{{- if .Values.ingress.ingressClassName }}
+{{ .Values.ingress.ingressClassName }}
+{{- else if eq .Values.ingress.type "nginx" }}
+nginx
+{{- else if eq .Values.ingress.type "traefik" }}
+traefik
+{{- else }}
+nginx
+{{- end }}
+{{- end }}
 
 {{/*
 Return the appropriate apiVersion for autoscaling.

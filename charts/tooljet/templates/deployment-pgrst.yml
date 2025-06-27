@@ -33,14 +33,12 @@ spec:
             {{- if .Values.tooljetdb_external_postgresql.enabled }}
             - name: PGRST_DB_URI
               value: {{ .Values.tooljetdb_external_postgresql.PGRST_DB_URI }}
-            - name: PGRST_DB_PRE_CONFIG
-              value: postgrest.pre_config
             {{- else }}
-            - name: PGRST_DB_PRE_CONFIG
-              value: postgrest.pre_config
             - name: PGRST_DB_URI
               value: {{ .Values.env.PGRST_DB_URI }}
             {{- end }}
+            - name: PGRST_DB_PRE_CONFIG
+              value: postgrest.pre_config
             - name: PGRST_DB_ANON_ROLE
               value: postgres
             - name: PGRST_JWT_SECRET
