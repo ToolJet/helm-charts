@@ -1,0 +1,27 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "tooljet.fullname" . }}-{{ .Values.ingress.type }}
+  labels:
+    {{- include "tooljet.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml (index .Values.ingress .Values.ingress.type).annotations | nindent 4 }}
+spec:
+  ingressClassName: {{ (index .Values.ingress .Values.ingress.type).ingressClassName }}
+  rules:
+    - host: {{ (index .Values.ingress .Values.ingress.type).hostname }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "tooljet.fullname" . }}
+                port:
+                  number: {{ .Values.apps.tooljet.service.port }}
+  {{- with (index .Values.ingress .Values.ingress.type).tls }}
+  tls:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
