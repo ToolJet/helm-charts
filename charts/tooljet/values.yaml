@@ -122,6 +122,26 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
 
+temporal:
+  image: temporalio/auto-setup:1.25.1
+  replicas: 1
+  env:
+    db: postgres12
+    port: 5432
+    user: temporal
+    password: temporal
+    dbHost: temporal-postgresql
+
+temporalPostgresql:
+  image: postgres:13
+  replicas: 1
+  pvc:
+    name: temporal-postgresql-pvc
+    storage: 5Gi
+  env:
+    user: temporal
+    password: temporal
+
 ingress:
   enabled: false
   type: nginx   # traefik
