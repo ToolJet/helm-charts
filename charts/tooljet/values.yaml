@@ -30,6 +30,10 @@ apps:
       port: 80
       targetPort: 3000
       type: ClusterIP
+    serviceAccount:
+      create: false
+      name: ""
+      annotations: {}
 
 postgresql:
   enabled: true
