@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tooljet.fullname" . }}
+  name: tooljet-worker-deployment
   labels:
-    {{- include "tooljet.labels" . | nindent 4 }}
-    {{- include "tooljet.selectorLabels" . | nindent 4 }}
+    app: tooljet-worker  # Corrected label format
+    component: worker    # You can add more labels as needed
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.apps.tooljet.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "tooljet.selectorLabels" . | nindent 6 }}
+      app: tooljet-worker  # Updated to match the label key
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,13 +19,14 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "tooljet.selectorLabels" . | nindent 8 }}
+        app: tooljet-worker   # Updated to match the label key
+        component: worker     # Updated for consistency
     spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.apps.tooljet.deployment.image.repository }}:{{ .Values.apps.tooljet.deployment.image.tag }}"
           imagePullPolicy: {{ .Values.apps.tooljet.deployment.image.pullPolicy }}
-          args: ["npm", "run", "start:prod"]
+          args: ["npm", "run", "worker:prod"]
           ports:
             - name: http
               containerPort: {{ .Values.apps.tooljet.containerPort }}
@@ -88,11 +89,12 @@ spec:
               value: {{ .Values.workflow_env.TEMPORAL_TASK_QUEUE_NAME_FOR_WORKFLOWS }}
             - name: TOOLJET_WORKFLOWS_TEMPORAL_NAMESPACE
               value: {{ .Values.workflow_env.TOOLJET_WORKFLOWS_TEMPORAL_NAMESPACE }}
+            - name: WORKER
+              value: {{ .Values.workflow_env.WORKER | quote }}
             - name: PGRST_HOST
               value: {{ .Values.env.PGRST_HOST }}
             - name: PGRST_JWT_SECRET
               value: {{ .Values.env.PGRST_JWT_SECRET | quote }}
-            {{- if .Values.redis.enabled }}
             - name: REDIS_HOST
               value: {{ .Values.redis_pod.REDIS_HOST | quote }}
             - name: REDIS_PORT
@@ -100,7 +102,6 @@ spec:
             - name: REDIS_USER
               value: {{ .Values.redis_pod.REDIS_USER | quote }}
             - name: REDIS_PASSWORD
-            {{- end }}
               valueFrom:
                 secretKeyRef:
                   name: {{ include "tooljet.fullname" . }}-redis

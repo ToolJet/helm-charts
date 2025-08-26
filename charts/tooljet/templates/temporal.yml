@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal
+spec:
+  replicas: {{ .Values.temporal.replicas }}
+  selector:
+    matchLabels:
+      app: temporal
+  template:
+    metadata:
+      labels:
+        app: temporal
+    spec:
+      containers:
+        - name: temporal
+          image: {{ .Values.temporal.image }}
+          env:
+            - name: DB
+              value: {{ .Values.temporal.env.db | quote }}
+            - name: DB_PORT
+              value: {{ .Values.temporal.env.port | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.temporal.env.user }}
+            - name: POSTGRES_PWD
+              value: {{ .Values.temporal.env.password }}
+            - name: POSTGRES_SEEDS
+              value: {{ .Values.temporal.env.dbHost }}
+          ports:
+            - containerPort: 7233
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporal
+spec:
+  ports:
+    - name: rpc
+      port: 7233
+      targetPort: 7233
+  selector:
+    app: temporal
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.temporalPostgresql.pvc.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.temporalPostgresql.pvc.storage }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal-postgresql
+spec:
+  replicas: {{ .Values.temporalPostgresql.replicas }}
+  selector:
+    matchLabels:
+      app: temporal-postgresql
+  template:
+    metadata:
+      labels:
+        app: temporal-postgresql
+    spec:
+      containers:
+        - name: temporal-postgresql
+          image: {{ .Values.temporalPostgresql.image }}
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.temporalPostgresql.env.user }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.temporalPostgresql.env.password }}
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.temporalPostgresql.pvc.name }}
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporal-postgresql
+spec:
+  ports:
+    - name: db
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: temporal-postgresql
