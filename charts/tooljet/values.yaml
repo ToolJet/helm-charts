@@ -52,11 +52,7 @@ env:
   PGRST_HOST: "tooljet-postgrest:3001"
 
 workflow_env:
-  ENABLE_WORKFLOW_SCHEDULING: "true"
-  TEMPORAL_SERVER_ADDRESS: "temporal:7233"
-  TEMPORAL_TASK_QUEUE_NAME_FOR_WORKFLOWS: "tooljet-workflows"
-  TOOLJET_WORKFLOWS_TEMPORAL_NAMESPACE: "default"
-  WORKFLOW_WORKER: "true"
+  WORKER: "true"
 
 external_postgresql:
   enabled: false
@@ -121,26 +117,6 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-
-temporal:
-  image: temporalio/auto-setup:1.25.1
-  replicas: 1
-  env:
-    db: postgres12
-    port: 5432
-    user: temporal
-    password: temporal
-    dbHost: temporal-postgresql
-
-temporalPostgresql:
-  image: postgres:13
-  replicas: 1
-  pvc:
-    name: temporal-postgresql-pvc
-    storage: 5Gi
-  env:
-    user: temporal
-    password: temporal
 
 ingress:
   enabled: false

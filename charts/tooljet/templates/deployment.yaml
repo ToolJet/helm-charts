@@ -80,14 +80,8 @@ spec:
             - name: TOOLJET_DB
               value: {{ .Values.env.TOOLJET_DB | quote }}
             {{- end }}
-            - name: ENABLE_WORKFLOW_SCHEDULING
-              value: {{ .Values.workflow_env.ENABLE_WORKFLOW_SCHEDULING | quote }}
-            - name: TEMPORAL_SERVER_ADDRESS
-              value: {{ .Values.workflow_env.TEMPORAL_SERVER_ADDRESS }}
-            - name: TEMPORAL_TASK_QUEUE_NAME_FOR_WORKFLOWS
-              value: {{ .Values.workflow_env.TEMPORAL_TASK_QUEUE_NAME_FOR_WORKFLOWS }}
-            - name: TOOLJET_WORKFLOWS_TEMPORAL_NAMESPACE
-              value: {{ .Values.workflow_env.TOOLJET_WORKFLOWS_TEMPORAL_NAMESPACE }}
+            - name: WORKER
+              value: {{ .Values.workflow_env.WORKER | quote }}
             - name: PGRST_HOST
               value: {{ .Values.env.PGRST_HOST }}
             - name: PGRST_JWT_SECRET
