@@ -26,7 +26,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.apps.tooljet.deployment.image.repository }}:{{ .Values.apps.tooljet.deployment.image.tag }}"
           imagePullPolicy: {{ .Values.apps.tooljet.deployment.image.pullPolicy }}
-          args: ["npm", "run", "worker:prod"]
+          args: ["npm", "run", "start:prod"]
           ports:
             - name: http
               containerPort: {{ .Values.apps.tooljet.containerPort }}
