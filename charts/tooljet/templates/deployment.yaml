@@ -94,11 +94,11 @@ spec:
             - name: REDIS_USER
               value: {{ .Values.redis_pod.REDIS_USER | quote }}
             - name: REDIS_PASSWORD
-            {{- end }}
               valueFrom:
                 secretKeyRef:
                   name: {{ include "tooljet.fullname" . }}-redis
                   key: password
+            {{- end }}
             - name: LOCKBOX_MASTER_KEY
               valueFrom:
                 secretKeyRef:

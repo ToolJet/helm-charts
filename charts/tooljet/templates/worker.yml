@@ -87,6 +87,7 @@ spec:
               value: {{ .Values.env.PGRST_HOST }}
             - name: PGRST_JWT_SECRET
               value: {{ .Values.env.PGRST_JWT_SECRET | quote }}
+            {{- if .Values.redis.enabled }}
             - name: REDIS_HOST
               value: {{ .Values.redis_pod.REDIS_HOST | quote }}
             - name: REDIS_PORT
@@ -98,6 +99,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "tooljet.fullname" . }}-redis
                   key: password
+            {{- end }}
             - name: LOCKBOX_MASTER_KEY
               valueFrom:
                 secretKeyRef:
