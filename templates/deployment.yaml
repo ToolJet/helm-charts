@@ -48,8 +48,6 @@ spec:
                   name: {{ include "tooljet.postgresql.secretName" . }}
                   key: postgres-password
             {{- else }}
-            - name: WORKER
-              value: {{ .Values.workflow_env.WORKER | quote }}
             - name: PG_HOST
               value: {{ .Values.external_postgresql.PG_HOST | quote }}
             - name: PG_PORT
@@ -82,6 +80,8 @@ spec:
             - name: TOOLJET_DB
               value: {{ .Values.env.TOOLJET_DB | quote }}
             {{- end }}
+            - name: WORKER
+              value: {{ .Values.workflow_env.WORKER | quote }}
             - name: PGRST_HOST
               value: {{ .Values.env.PGRST_HOST }}
             - name: PGRST_JWT_SECRET
@@ -94,11 +94,11 @@ spec:
             - name: REDIS_USER
               value: {{ .Values.redis_pod.REDIS_USER | quote }}
             - name: REDIS_PASSWORD
-            {{- end }}
               valueFrom:
                 secretKeyRef:
                   name: {{ include "tooljet.fullname" . }}-redis
                   key: password
+            {{- end }}
             - name: LOCKBOX_MASTER_KEY
               valueFrom:
                 secretKeyRef:
