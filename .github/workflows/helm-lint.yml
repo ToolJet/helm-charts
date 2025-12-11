@@ -65,3 +65,18 @@ jobs:
       - name: Run Helm lint on ToolJet chart
         run: |
           helm lint ${{ steps.chart-path.outputs.path }} --strict
+
+      - name: Test Helm deployment (dry-run)
+        run: |
+          helm install test-release ${{ steps.chart-path.outputs.path }} \
+            --dry-run \
+            --debug \
+            --namespace test \
+            --create-namespace
+
+      - name: Validate template rendering
+        run: |
+          helm template test-release ${{ steps.chart-path.outputs.path }} \
+            --namespace test > /tmp/rendered.yaml
+          echo "✅ Templates rendered successfully"
+          echo "📊 Total lines rendered: $(wc -l < /tmp/rendered.yaml)"
