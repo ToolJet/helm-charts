@@ -148,3 +148,14 @@ Return the appropriate apiVersion for autoscaling.
 {{- print "autoscaling/v2beta2" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the service account name
+*/}}
+{{- define "tooljet.serviceAccountName" -}}
+{{- if .Values.apps.tooljet.serviceAccount.name -}}
+{{- .Values.apps.tooljet.serviceAccount.name -}}
+{{- else -}}
+{{- include "tooljet.fullname" . -}}
+{{- end -}}
+{{- end -}}
