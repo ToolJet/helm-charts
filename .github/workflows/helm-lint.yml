@@ -1,0 +1,67 @@
+name: Helm Lint Chart
+
+on:
+  pull_request:
+    branches: [main, gh-pages]
+    paths:
+      - 'charts/**'
+      - 'Chart.yaml'
+      - 'values.yaml'
+      - 'templates/**'
+      - '.github/workflows/helm-lint.yml'
+  pull_request_target:
+    types: [labeled]
+    branches: [main, gh-pages]
+  schedule:
+    - cron: '0 9 * * 1'  # Mondays 9 AM UTC
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    # Security: Only run pull_request_target if 'helm-lint' label present
+    if: |
+      github.event_name != 'pull_request_target' ||
+      contains(github.event.pull_request.labels.*.name, 'helm-lint')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 'v3.14.0'
+
+      - name: Add Bitnami Helm repository
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+        timeout-minutes: 5
+
+      - name: Determine chart path based on branch
+        id: chart-path
+        run: |
+          if [ -f "Chart.yaml" ]; then
+            # gh-pages branch: chart is at root
+            echo "path=." >> $GITHUB_OUTPUT
+            echo "name=root" >> $GITHUB_OUTPUT
+          elif [ -d "charts/tooljet" ]; then
+            # main branch: chart is in charts/tooljet
+            echo "path=charts/tooljet" >> $GITHUB_OUTPUT
+            echo "name=charts/tooljet" >> $GITHUB_OUTPUT
+          else
+            echo "Error: Chart not found in expected locations"
+            exit 1
+          fi
+
+      - name: Update Helm chart dependencies
+        run: |
+          cd ${{ steps.chart-path.outputs.path }}
+          helm dependency update
+
+      - name: Run Helm lint on ToolJet chart
+        run: |
+          helm lint ${{ steps.chart-path.outputs.path }} --strict
