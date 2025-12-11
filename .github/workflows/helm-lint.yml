@@ -65,3 +65,19 @@ jobs:
       - name: Run Helm lint on ToolJet chart
         run: |
           helm lint ${{ steps.chart-path.outputs.path }} --strict
+
+      - name: Validate template rendering
+        run: |
+          echo "Rendering templates to validate syntax..."
+          helm template test-release ${{ steps.chart-path.outputs.path }} \
+            --namespace test > /tmp/rendered.yaml
+
+          echo "✅ Templates rendered successfully"
+          echo "📊 Total lines rendered: $(wc -l < /tmp/rendered.yaml)"
+
+          # Validate that key resources are present
+          echo ""
+          echo "📋 Checking for required resources..."
+          grep -q "kind: Deployment" /tmp/rendered.yaml && echo "  ✓ Deployment found"
+          grep -q "kind: Service" /tmp/rendered.yaml && echo "  ✓ Service found"
+          grep -q "kind: Secret" /tmp/rendered.yaml && echo "  ✓ Secret found"
