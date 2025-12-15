@@ -2,7 +2,7 @@ name: Helm Deployment Test
 
 on:
   schedule:
-    - cron: '0 10 * * 1'  # Mondays 10 AM UTC (1 hour after lint)
+    - cron: '0 10 * * 1' # Mondays 10 AM UTC (1 hour after lint)
   workflow_dispatch:
 
 jobs:
