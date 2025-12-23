@@ -21,6 +21,9 @@ spec:
       labels:
         {{- include "tooljet.selectorLabels" . | nindent 8 }}
     spec:
+      {{- if .Values.apps.tooljet.serviceAccount.create }}
+      serviceAccountName: {{ include "tooljet.serviceAccountName" . }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.apps.tooljet.deployment.image.repository }}:{{ .Values.apps.tooljet.deployment.image.tag }}"
