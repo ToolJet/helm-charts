@@ -16,6 +16,10 @@ on:
     - cron: '0 9 * * 1'  # Mondays 9 AM UTC
   workflow_dispatch:
 
+# Only reads the repo; no write access needed (also limits the token on pull_request_target)
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -64,13 +68,20 @@ jobs:
 
       - name: Run Helm lint on ToolJet chart
         run: |
-          helm lint ${{ steps.chart-path.outputs.path }} --strict
+          # Test-only keys, generated fresh each run (the chart requires them)
+          helm lint ${{ steps.chart-path.outputs.path }} --strict \
+            --set apps.tooljet.secret.data.lockbox_key="$(openssl rand -hex 32)" \
+            --set apps.tooljet.secret.data.secret_key_base="$(openssl rand -hex 64)" \
+            --set env.PGRST_JWT_SECRET="$(openssl rand -hex 32)"
 
       - name: Validate template rendering
         run: |
           echo "Rendering templates to validate syntax..."
           helm template test-release ${{ steps.chart-path.outputs.path }} \
-            --namespace test > /tmp/rendered.yaml
+            --namespace test \
+            --set apps.tooljet.secret.data.lockbox_key="$(openssl rand -hex 32)" \
+            --set apps.tooljet.secret.data.secret_key_base="$(openssl rand -hex 64)" \
+            --set env.PGRST_JWT_SECRET="$(openssl rand -hex 32)" > /tmp/rendered.yaml
 
           echo "✅ Templates rendered successfully"
           echo "📊 Total lines rendered: $(wc -l < /tmp/rendered.yaml)"
